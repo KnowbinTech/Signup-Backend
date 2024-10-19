@@ -1,31 +1,41 @@
-FROM python:3.12
+# Use an official Python runtime as a parent image
+FROM python:3.12.7
 
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Set env Variables
-
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-
-
-# Set the working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy the requirements file
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
 COPY requirements.txt /app/
-
-# Install  dependencies
 RUN pip install --upgrade pip
-RUN pip install -r requirements.txt   
+RUN pip install --no-cache-dir -r requirements.txt
 
-
-# Copy the project code
+# Copy the Django project code to the container
 COPY . /app/
 
-#remove .env directory and create .env file
-#RUN rm -rf .env
+# Collect static files
+RUN python manage.py collectstatic --noinput
 
-# COllect static files
-#RUN python manage.py collectstatic --noinput
+# Expose the port that the app will run on
+EXPOSE 8001
 
-
+# Use Gunicorn to run the Django app
+CMD gunicorn e_commerce.wsgi:application \
+    --bind 0.0.0.0:8001 \
+    --workers $((2 * $(nproc) + 1)) \
+    --threads 3 \
+    --timeout 60 \
+    --max-requests 1000 \
+    --max-requests-jitter 100 \
+    --access-logfile /var/log/gunicorn/access.log \
+    --error-logfile /var/log/gunicorn/error.log \
+    --log-level info

@@ -1,17 +1,29 @@
-version: '3'
+version: '3.12.7'
 
 services:
   django:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python manage.py migrate && python manage.py collectstatic --noinput && gunicorn app.wsgi:application --bind 0.0.0.0:8001 --workers 2 --threads=3 --timeout=1000 --max-requests=4000 --max-requests-jitter=100 --access-logfile - --error-logfile - --log-level info
+    command: >
+      python manage.py migrate &&
+      python manage.py collectstatic --noinput &&
+      gunicorn e_commerce.wsgi:application
+      --bind 0.0.0.0:8001
+      --workers $((2 * $(nproc) + 1))  # Automatically set based on CPU cores
+      --threads 3
+      --timeout 60                    # Reasonable timeout
+      --max-requests 1000             # Adjusted for better memory management
+      --max-requests-jitter 100
+      --access-logfile /var/log/gunicorn/access.log
+      --error-logfile /var/log/gunicorn/error.log
+      --log-level info
     volumes:
       - .:/app
     ports:
       - "8001:8001"
     environment:
-      - DJANGO_SECRET_KEY='django-insecure-fp76c(6p%%!x-p)wv#d!w*4ff60qjukiims407wo)-xjr10r+h'
+      - DJANGO_SECRET_KEY='xWA2U0dJt7c9SJgGXyoqlbhzirsaaeE1fkIOdIP6-yoWKk-95lljC_LAr8eL3n_qAbk'
       - DEBUG=True
       - DB_NAME=signupdb
       - DB_USER=signupadmin
