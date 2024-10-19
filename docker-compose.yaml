@@ -27,24 +27,36 @@ services:
       - DEBUG=True
       - DB_NAME=signupdb
       - DB_USER=signupadmin
-      - DB_PASSWORD=HelloSignup@789
+      - DB_PASSWORD=HelloSignup789
       - DB_HOST=135.181.1.40
       - DB_PORT=5433
 
-# Payment Details (PhonePe)
-# ------------------------
-# PHONE_PE_USER_ID=8891633773
+      # Payment Details (PhonePe)
+      # ------------------------
+      # PHONE_PE_USER_ID=8891633773
       - PHONE_PE_USER_ID=MUID123
-# PHONE_PE_MERCHANT_ID=M22Q3JLT6IUGJ
+      # PHONE_PE_MERCHANT_ID=M22Q3JLT6IUGJ
       - PHONE_PE_MERCHANT_ID=PGTESTPAYUAT
-# PHONE_PE_API_KEY=35456a48-fc84-4a0f-ad63-d53de7f4659b
+      # PHONE_PE_API_KEY=35456a48-fc84-4a0f-ad63-d53de7f4659b
       - PHONE_PE_API_KEY=099eb0cd-02cf-4e2a-8aca-3e6c6aff0399
       - PHONE_PE_KEY_INDEX=1
 
       - PHONE_PAY_S2S_CALLBACK_URL=https://manage.signupcasuals.com:8443/api/transaction/payment/callback/
       - PHONE_PAY_REDIRECT_URL=http://manage.signupcasuals.com:8443/api/transaction/payment/callback/
 
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=signupdb
+      - POSTGRES_USER=signupadmin
+      - DB_PASSWORD=HelloSignup789
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5433"
 
+volumes:
+  postgres_data:
   
       
   

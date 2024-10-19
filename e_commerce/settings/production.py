@@ -75,7 +75,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'signupdb',
         'USER': 'signupadmin',
-        'PASSWORD': 'HelloSignup@789',
+        'PASSWORD': 'HelloSignup789',
         'HOST': '135.181.1.40',
         'PORT': '5433',
     }
