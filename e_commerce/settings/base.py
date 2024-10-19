@@ -11,11 +11,11 @@ from .utils import get_env
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 if get_env() == 'prod' or get_env() == 'production':
-    dotenv_path = BASE_DIR.parent / '.env' / '.prod'
+    dotenv_path = BASE_DIR.parent / '.env'
 elif get_env() == 'stage' or get_env() == 'uat':
-    dotenv_path = BASE_DIR.parent / '.env' / '.stage'
+    dotenv_path = BASE_DIR.parent / '.env'
 else:
-    dotenv_path = BASE_DIR.parent / '.env' / '.local'
+    dotenv_path = BASE_DIR.parent / '.env'
 
 load_dotenv(dotenv_path)
 
