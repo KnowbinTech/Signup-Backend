@@ -30,7 +30,7 @@ EXPOSE 8001
 
 # Use Gunicorn to run the Django app
 CMD gunicorn e_commerce.wsgi:application \
-    --bind 0.0.0.0:8001 \
+    --bind 127.0.0.1:8001 \
     --workers 2 \
     --threads 3 \
     --timeout 1000 \
