@@ -8,7 +8,7 @@ from pathlib import Path
 from datetime import timedelta
 from .utils import get_env
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve()
 
 if get_env() == 'prod' or get_env() == 'production':
     dotenv_path = BASE_DIR.parent / '.env'
