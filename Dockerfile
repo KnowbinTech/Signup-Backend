@@ -1,9 +1,5 @@
 FROM python:3.12
 
-#remove .env directory and create .env file
-RUN rm -rf .env
-
-
 
 # Set env Variables
 
@@ -25,6 +21,9 @@ RUN pip install -r requirements.txt  
 
 # Copy the project code
 COPY . /app/
+
+#remove .env directory and create .env file
+#RUN rm -rf .env
 
 # COllect static files
 RUN python manage.py collectstatic --noinput
