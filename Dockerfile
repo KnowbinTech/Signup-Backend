@@ -23,6 +23,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
 # Collect static files
+RUN mkdir /e_commerce/static/
 RUN python manage.py collectstatic --noinput
 
 # Expose the port that the app will run on
