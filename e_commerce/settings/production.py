@@ -8,6 +8,7 @@ ALLOWED_HOSTS = [
     "localhost:3000",
     "manage.signupcasuals.com",
     "signupcasuals.com",
+    "signupbackend.knowbin.tech",
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -16,6 +17,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://manage.signupcasuals.com',
     'http://signupcasuals.com',
     'https://signupcasuals.com',
+    'https://signupbackend.knowbin.tech',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -23,13 +25,16 @@ CSRF_TRUSTED_ORIGINS = [
     'https://manage.signupcasuals.com:8443',
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
+    'https://signupbackend.knowbin.tech',
 ]
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
     'https://manage.signupcasuals.com:8443',
     'https://manage.signupcasuals.com',
-    'https://signupcasuals.com'
+    'https://signupcasuals.com',
+    'https://signupbackend.knowbin.tech:8001',
+    'https://signupbackend.knowbin.tech',
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
@@ -54,6 +59,7 @@ CSRF_COOKIE_DOMAIN = [
     'https://manage.signupcasuals.com:8443',
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
+    'https://signupbackend.knowbin.tech',
 ]
 
 # Set the secure flag for the CSRF cookie (recommended for HTTPS)
@@ -74,10 +80,9 @@ DATABASES = {
 }
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR.parent, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR.parent, 'staticfiles')
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '143621340002-lmgf8f4tb5i5blkdt3hptkb5fsk6930m.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
