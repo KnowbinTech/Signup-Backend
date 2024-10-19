@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = os.environ.get('DEBUG')
+DEBUG = False
 
 INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
 
@@ -81,9 +81,8 @@ DATABASES = {
     }
 }
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = ['/app/e_commerce/static']
-STATIC_ROOT = '/app/e_commerce/staticfiles'
+STATICFILES_DIRS = [os.path.join(BASE_DIR.parent, 'static')]
+STATIC_ROOT = BASE_DIR.parent / 'staticfiles'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '143621340002-lmgf8f4tb5i5blkdt3hptkb5fsk6930m.apps.googleusercontent.com'
