@@ -1,5 +1,4 @@
 from .base import *
-import dj_database_url
 
 DEBUG = os.environ.get('DEBUG')
 
@@ -72,9 +71,14 @@ CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_PATH = '/'
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgres://signupadmin:HelloSignup%40789@135.181.1.40:5433/signupdb'
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'signupdb',
+        'USER': 'signupadmin',
+        'PASSWORD': 'HelloSignup@789',
+        'HOST': '135.181.1.40',
+        'PORT': '5433',
+    }
 }
 
 STATIC_URL = '/static/'

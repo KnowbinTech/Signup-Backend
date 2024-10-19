@@ -8,7 +8,6 @@ cffi==1.16.0
 charset-normalizer==3.3.2
 cryptography==43.0.1
 defusedxml==0.8.0rc2
-dj-database-url==2.2.0
 Django==4.2.4
 django-allauth==0.55.0
 django-base64field==1.0
