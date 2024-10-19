@@ -9,7 +9,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgres://postgres:2E4ph1SADrGiA7VdikXpX57HliC1ARxMmNlgwAtptTcVDe30GUtgutVTXFzX1DVZ@egwcw4wkkg04kwgk4wk4g4os:5432/postgres
       - DJANGO_SECRET_KEY='django-insecure-fp76c(6p%%!x-p)wv#d!w*4ff60qjukiims407wo)-xjr10r+h'
       - DEBUG=True
       - DB_NAME=signupdb
