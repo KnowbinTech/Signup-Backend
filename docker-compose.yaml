@@ -33,14 +33,6 @@ services:
       - PHONE_PAY_REDIRECT_URL=http://manage.signupcasuals.com:8443/api/transaction/payment/callback/
 
 
-    depends_on:
-      - signupDBPostgres
-
-  signupDBPostgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: signupdb
-      POSTGRES_USER: signupadmin
-      POSTGRES_PASSWORD: HelloSignup@789
+  
       
   
