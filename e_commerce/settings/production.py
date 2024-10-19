@@ -1,4 +1,5 @@
 from .base import *
+import dj_database_url
 
 DEBUG = os.environ.get('DEBUG')
 
@@ -25,6 +26,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://manage.signupcasuals.com:8443',
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
+    'https://signupbackend.knowbin.tech:8001',
     'https://signupbackend.knowbin.tech',
 ]
 
@@ -59,6 +61,7 @@ CSRF_COOKIE_DOMAIN = [
     'https://manage.signupcasuals.com:8443',
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
+    'https://signupbackend.knowbin.tech:8001',
     'https://signupbackend.knowbin.tech',
 ]
 
@@ -69,14 +72,12 @@ CSRF_COOKIE_SECURE = True
 CSRF_COOKIE_PATH = '/'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get(
+            'DATABASE_URL',
+            'postgres://signupadmin:HelloSignup@789@ascwcg4k8gg8ko4s00o0wwkc:5432/signupdb'
+        )
+    )
 }
 
 STATIC_URL = '/static/'
