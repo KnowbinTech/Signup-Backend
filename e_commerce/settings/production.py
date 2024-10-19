@@ -73,15 +73,13 @@ CSRF_COOKIE_PATH = '/'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get(
-            'DATABASE_URL',
-            'postgres://signupadmin:HelloSignup@789@ascwcg4k8gg8ko4s00o0wwkc:5432/signupdb'
-        )
+        default='postgres://signupadmin:HelloSignup%40789@135.181.1.40:5433/signupdb'
     )
 }
 
-STATICFILES_DIRS = '/app/static'
-STATIC_ROOT = '/app/staticfiles'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = '/app/e_commerce/static'
+STATIC_ROOT = '/app/e_commerce/staticfiles'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '143621340002-lmgf8f4tb5i5blkdt3hptkb5fsk6930m.apps.googleusercontent.com'
