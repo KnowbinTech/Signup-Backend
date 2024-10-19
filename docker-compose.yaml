@@ -1,9 +1,13 @@
-version: '3.7'
+version: '3'
 
 services:
   django:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
     environment:
       - DATABASE_URL=postgres://postgres:2E4ph1SADrGiA7VdikXpX57HliC1ARxMmNlgwAtptTcVDe30GUtgutVTXFzX1DVZ@egwcw4wkkg04kwgk4wk4g4os:5432/postgres
     depends_on:
