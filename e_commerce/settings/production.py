@@ -78,7 +78,7 @@ DATABASES = {
 }
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = '/app/e_commerce/static'
+STATICFILES_DIRS = ['/app/e_commerce/static']
 STATIC_ROOT = '/app/e_commerce/staticfiles'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
