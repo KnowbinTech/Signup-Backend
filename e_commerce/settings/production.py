@@ -76,8 +76,8 @@ DATABASES = {
         'NAME': 'signupdb',
         'USER': 'signupadmin',
         'PASSWORD': 'HelloSignup789',
-        'HOST': '135.181.1.40',
-        'PORT': '5433',
+        'HOST': 'w08ww8gsw0g4w0ggo4g8kkkc',
+        'PORT': '5432',
     }
 }
 
