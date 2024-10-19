@@ -16,8 +16,8 @@ services:
       - DB_NAME=signupdb
       - DB_USER=signupadmin
       - DB_PASSWORD=HelloSignup@789
-      - DB_HOST=135.181.1.40
-      - DB_PORT=5432
+      - DB_HOST=postgres://signupadmin:HelloSignup@789@135.181.1.40
+      - DB_PORT=5433
 
 # Payment Details (PhonePe)
 # ------------------------
@@ -33,14 +33,6 @@ services:
       - PHONE_PAY_REDIRECT_URL=http://manage.signupcasuals.com:8443/api/transaction/payment/callback/
 
 
-    depends_on:
-      - signupDBPostgres
-
-  signupDBPostgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_DB: signupdb
-      POSTGRES_USER: signupadmin
-      POSTGRES_PASSWORD: HelloSignup@789
+  
       
   
