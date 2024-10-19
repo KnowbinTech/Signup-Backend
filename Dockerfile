@@ -1,5 +1,9 @@
 FROM python:3.12
 
+#remove .env directory and create .env file
+RUN rm -rf .env
+
+
 
 # Set env Variables
 
