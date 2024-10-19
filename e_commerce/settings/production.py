@@ -80,7 +80,6 @@ DATABASES = {
     )
 }
 
-STATIC_URL = '/static/'
 STATICFILES_DIRS = '/app/static'
 STATIC_ROOT = '/app/staticfiles'
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
