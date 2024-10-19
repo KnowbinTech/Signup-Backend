@@ -19,7 +19,7 @@ else:
 
 load_dotenv(dotenv_path)
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = 'django-insecure-fp76c(6p%%!x-p)wv#d!w*4ff60qjukiims407wo)-xjr10r+h'
 
 DEBUG = False
 
