@@ -19,7 +19,7 @@ else:
 
 load_dotenv(dotenv_path)
 
-SECRET_KEY = 'django-insecure-fp76c(6p%%!x-p)wv#d!w*4ff60qjukiims407wo)-xjr10r+h'
+SECRET_KEY = 'xWA2U0dJt7c9SJgGXyoqlbhzirsaaeE1fkIOdIP6-yoWKk-95lljC_LAr8eL3n_qAbk'
 
 DEBUG = False
 
