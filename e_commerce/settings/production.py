@@ -16,7 +16,10 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
-     "localhost",
+     "https://localhost",
+    "https://0.0.0.0",
+    "https://127.0.0.1",
+    "localhost",
     "0.0.0.0",
     "127.0.0.1",
     'http://manage.signupcasuals.com',
@@ -28,9 +31,9 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
-     "localhost",
-    "0.0.0.0",
-    "127.0.0.1",
+   "https://localhost",
+    "https://0.0.0.0",
+    "https://127.0.0.1",
     'https://manage.signupcasuals.com:8443',
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
