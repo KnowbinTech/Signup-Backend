@@ -22,20 +22,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the Django project code to the container
 COPY . .
 
-# Collect static files
-RUN python manage.py collectstatic --noinput
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
-# Expose the port that the app will run on
-EXPOSE 8000
-
-# Use Gunicorn to run the Django app
-CMD [ gunicorn e_commerce.wsgi:application \
-    --bind 0.0.0.0:8000 \
-    --workers 2 \
-    --threads 3 \
-    --timeout 1000 \
-    --max-requests 4000 \
-    --max-requests-jitter 100 \
-    --access-logfile /var/log/gunicorn/access.log \
-    --error-logfile /var/log/gunicorn/error.log \
-    --log-level info ]
+# Use the entrypoint script
+ENTRYPOINT ["/app/entrypoint.sh"]
