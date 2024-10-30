@@ -5,7 +5,7 @@ services:
     build: .
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "8001"
     environment:
       - DJANGO_SECRET_KEY='xWA2U0dJt7c9SJgGXyoqlbhzirsaaeE1fkIOdIP6-yoWKk-95lljC_LAr8eL3n_qAbk'
       - DEBUG=True
@@ -25,6 +25,7 @@ services:
       - PHONE_PE_KEY_INDEX=1
       - PHONE_PAY_S2S_CALLBACK_URL=https://manage.signupcasuals.com:8443/api/transaction/payment/callback/
       - PHONE_PAY_REDIRECT_URL=http://manage.signupcasuals.com:8443/api/transaction/payment/callback/
+      - PORT=8001
   
     volumes:
       - static_volume:/app/staticfiles
