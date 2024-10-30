@@ -1,29 +1,23 @@
-# Use an official Python runtime as a parent image
-FROM python:3.12.7
+FROM python:3.9-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Set working directory inside the container
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
+    gcc \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --upgrade pip
+# Copy requirements and install dependencies
+COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the Django project code to the container
-COPY . .
+# Copy entrypoint first and make it executable
+COPY entrypoint.sh /app/
+RUN chmod +x /app/entrypoint.sh
 
-COPY entrypoint.sh .
-RUN chmod +x entrypoint.sh
+# Copy the rest of the application
+COPY . /app/
 
-# Use the entrypoint script
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Specify the entrypoint script
+ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]
