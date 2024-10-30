@@ -12,8 +12,8 @@ services:
       - DB_NAME=signupdb
       - DB_USER=signupadmin
       - DB_PASSWORD=HelloSignup789
-      - DB_HOST=135.181.1.40
-      - DB_PORT=5433
+      - DB_HOST=w08ww8gsw0g4w0ggo4g8kkkc
+      - DB_PORT=5432
       # Payment Details (PhonePe)
       # ------------------------
       # PHONE_PE_USER_ID=8891633773
