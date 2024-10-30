@@ -74,6 +74,9 @@ CSRF_COOKIE_DOMAIN = [
     'https://signupcasuals.com',
     'https://signupbackend.knowbin.tech:8001',
     'https://signupbackend.knowbin.tech',
+     "localhost",
+    "0.0.0.0",
+    "127.0.0.1",
 ]
 
 # Set the secure flag for the CSRF cookie (recommended for HTTPS)
