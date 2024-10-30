@@ -28,12 +28,7 @@ services:
   
     volumes:
       - static_volume:/app/staticfiles
-    networks:
-      - coolify-network
 
-networks:
-  coolify-network:
-    external: true
 
 volumes:
   static_volume:
