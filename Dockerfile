@@ -15,22 +15,22 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt /app/
+COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the Django project code to the container
-COPY . /app/
+COPY . .
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
 
 # Expose the port that the app will run on
-EXPOSE 8001
+EXPOSE 8000
 
 # Use Gunicorn to run the Django app
-CMD gunicorn e_commerce.wsgi:application \
-    --bind 127.0.0.1:8000 \
+CMD [ gunicorn e_commerce.wsgi:application \
+    --bind 0.0.0.0:8000 \
     --workers 2 \
     --threads 3 \
     --timeout 1000 \
@@ -38,4 +38,4 @@ CMD gunicorn e_commerce.wsgi:application \
     --max-requests-jitter 100 \
     --access-logfile /var/log/gunicorn/access.log \
     --error-logfile /var/log/gunicorn/error.log \
-    --log-level info
+    --log-level info ]
