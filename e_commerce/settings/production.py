@@ -6,6 +6,9 @@ INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
 
 ALLOWED_HOSTS = [
     "localhost:3000",
+     "localhost",
+    "0.0.0.0",
+    "127.0.0.1",
     "manage.signupcasuals.com",
     "signupcasuals.com",
     "signupbackend.knowbin.tech",
@@ -13,6 +16,9 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+     "localhost",
+    "0.0.0.0",
+    "127.0.0.1",
     'http://manage.signupcasuals.com',
     'https://manage.signupcasuals.com',
     'http://signupcasuals.com',
@@ -22,6 +28,9 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
+     "localhost",
+    "0.0.0.0",
+    "127.0.0.1",
     'https://manage.signupcasuals.com:8443',
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
@@ -31,6 +40,9 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+     "localhost",
+    "0.0.0.0",
+    "127.0.0.1",
     'https://manage.signupcasuals.com:8443',
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
