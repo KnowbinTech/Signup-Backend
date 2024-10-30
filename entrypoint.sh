@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+mkdir /app/e_commerce/settings/static
+
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
