@@ -1,10 +1,11 @@
 #!/bin/bash
+set -e
 
-# Collect static files
+echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
-# Apply database migrations
-python manage.py migrate
+echo "Applying migrations..."
+python manage.py migrate --noinput
 
-# Start Gunicorn
-exec gunicorn --bind 0.0.0.0:8000 e_commerce.wsgi:application
+echo "Starting Gunicorn..."
+exec gunicorn e_commerce.wsgi:application --bind 0.0.0.0:8000
