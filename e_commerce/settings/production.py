@@ -7,6 +7,8 @@ INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
 ALLOWED_HOSTS = [
     "localhost:3000",
     "https://backend.signupcasuals.com",
+    "https://backend.signupcasuals.com",
+    "backend.signupcasuals.com",
      "localhost",
     "0.0.0.0",
     "127.0.0.1",
