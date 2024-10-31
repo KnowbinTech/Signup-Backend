@@ -6,6 +6,7 @@ INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
 
 ALLOWED_HOSTS = [
     "localhost:3000",
+    "https://backend.signupcasuals.com",
      "localhost",
     "0.0.0.0",
     "127.0.0.1",
@@ -16,6 +17,7 @@ ALLOWED_HOSTS = [
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
+    "https://backend.signupcasuals.com",
      "https://localhost",
     "https://0.0.0.0",
     "https://127.0.0.1",
@@ -28,6 +30,7 @@ CORS_ALLOWED_ORIGINS = [
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
+    "https://backend.signupcasuals.com",
    "https://localhost",
     "https://0.0.0.0",
     "https://127.0.0.1",
@@ -40,6 +43,7 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+    "https://backend.signupcasuals.com",
      "localhost",
     "0.0.0.0",
     "127.0.0.1",
@@ -70,6 +74,7 @@ CSRF_COOKIE_NAME = 'csrftoken'
 # Set the CSRF cookie domain
 CSRF_COOKIE_DOMAIN = [
     'https://manage.signupcasuals.com:8443',
+    "https://backend.signupcasuals.com",
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
     'https://signupbackend.knowbin.tech:8001',
