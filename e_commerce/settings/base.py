@@ -23,7 +23,7 @@ load_dotenv(dotenv_path)
 
 SECRET_KEY = 'xWA2U0dJt7c9SJgGXyoqlbhzirsaaeE1fkIOdIP6-yoWKk-95lljC_LAr8eL3n_qAbk'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
