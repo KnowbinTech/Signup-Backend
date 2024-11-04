@@ -262,7 +262,7 @@ class CategoryModelSerializerGET(serializers.ModelSerializer):
     parent_category = serializers.SerializerMethodField()
 
     def get_parent_category(self, attrs):
-        return attrs.parent_category.name if attrs.parent_category else ''
+        return {'id':attrs.parent_category.id, 'name':attrs.parent_category.name} if attrs.parent_category else ''
 
     def get_created_by(self, attrs):
         return str(attrs.created_by if attrs.created_by else '')
