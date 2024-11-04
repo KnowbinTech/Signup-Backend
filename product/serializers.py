@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.db.models import Sum
 
 from product.models import Products
 from product.models import Variant
@@ -104,6 +105,11 @@ class ProductsModelSerializerGET(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     created_by = serializers.SerializerMethodField()
     updated_by = serializers.SerializerMethodField()
+    stock = serializers.SerializerMethodField()
+
+    def get_stock(self, attrs):
+        total_stock = attrs.product_variant.aggregate(total=Sum('stock'))['total']
+        return total_stock or 0 
 
     def get_created_by(self, attrs):
         return str(attrs.created_by if attrs.created_by else '')
