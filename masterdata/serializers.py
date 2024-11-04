@@ -259,6 +259,10 @@ class CategoryModelSerializerGET(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     created_by = serializers.SerializerMethodField()
     updated_by = serializers.SerializerMethodField()
+    parent_category = serializers.SerializerMethodField()
+
+    def get_parent_category(self, attrs):
+        return attrs.parent_category.name if attrs.parent_category else ''
 
     def get_created_by(self, attrs):
         return str(attrs.created_by if attrs.created_by else '')
