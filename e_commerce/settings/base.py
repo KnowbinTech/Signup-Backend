@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve()
 print('BASE_DIR : ', BASE_DIR)
 
 if get_env() == 'prod' or get_env() == 'production':
-    dotenv_path = BASE_DIR / '.env'
+    dotenv_path = BASE_DIR.parent / '.env'
 elif get_env() == 'stage' or get_env() == 'uat':
     dotenv_path = BASE_DIR.parent / '.env'
 else:
@@ -286,6 +286,6 @@ CSRF_TRUSTED_ORIGINS = [
     'https://manage.signupcasuals.com/',
 ]
 
-URL_PREFIX = 'api/'
+URL_PREFIX = '/'
 
 DATE_FORMAT = ['%Y-%m-%d', '%d-%m-%Y']
