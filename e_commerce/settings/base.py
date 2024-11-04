@@ -286,6 +286,6 @@ CSRF_TRUSTED_ORIGINS = [
     'https://manage.signupcasuals.com/',
 ]
 
-URL_PREFIX = '/'
+URL_PREFIX = ''
 
 DATE_FORMAT = ['%Y-%m-%d', '%d-%m-%Y']
