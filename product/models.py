@@ -49,7 +49,7 @@ class Products(BaseModel):
 
     rating = models.CharField(max_length=120, verbose_name='Rating', blank=True, null=True)
     no_of_reviews = models.IntegerField(verbose_name='No. of Reviews', blank=True, null=True)
-    # preferred_gender = models.CharField(choices=PREFERRED_GENDER, max_length=50, blank=True, null=True)
+    preferred_gender = models.CharField(choices=PREFERRED_GENDER, max_length=50, blank=True, null=False)
 
     objects = ProductsManager()
 
