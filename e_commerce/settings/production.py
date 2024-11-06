@@ -5,72 +5,35 @@ DEBUG = True
 INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
 
 ALLOWED_HOSTS = [
-    "localhost:3000",
-    "localhost:5174",
-    "localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:5173",
-    "https://backend.signupcasuals.com",
-    "https://backend.signupcasuals.com",
     "backend.signupcasuals.com",
-     "localhost",
-    "0.0.0.0",
-    "127.0.0.1",
     "manage.signupcasuals.com",
     "signupcasuals.com",
     "signupbackend.knowbin.tech",
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
     "https://backend.signupcasuals.com",
-     "https://backend.signupcasuals.com",
-     "https://localhost",
-    "http://localhost:5174",
-    "http://localhost:5173",
-    "https://0.0.0.0",
-    "https://127.0.0.1",
-    'http://manage.signupcasuals.com',
     'https://manage.signupcasuals.com',
-    'http://signupcasuals.com',
     'https://signupcasuals.com',
     'https://signupbackend.knowbin.tech',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:3000',
     "https://backend.signupcasuals.com",
-     "https://backend.signupcasuals.com",
-   "https://localhost",
-    "https://0.0.0.0",
-    "https://127.0.0.1",
-    "http://localhost:5174",
-    "http://localhost:5173",
-    'https://manage.signupcasuals.com:8443',
+    'https://manage.signupcasuals.com',
+    'https://signupcasuals.com',
+    'https://signupbackend.knowbin.tech',
+]
+
+CORS_ORIGIN_WHITELIST = [
+    "https://backend.signupcasuals.com",
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
     'https://signupbackend.knowbin.tech:8001',
     'https://signupbackend.knowbin.tech',
 ]
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000',
-    "https://backend.signupcasuals.com",
-     "https://backend.signupcasuals.com",
-    "backend.signupcasuals.com",
-     "localhost:5174",
-    "localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:5173",
-     "localhost",
-    "0.0.0.0",
-    "127.0.0.1",
-    'https://manage.signupcasuals.com:8443',
-    'https://manage.signupcasuals.com',
-    'https://signupcasuals.com',
-    'https://signupbackend.knowbin.tech:8001',
-    'https://signupbackend.knowbin.tech',
-]
+CORS_ALLOW_ALL_ORIGINS = False
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
 # SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -90,26 +53,13 @@ CORS_ORIGIN_WHITELIST = [
 
 CSRF_COOKIE_NAME = 'csrftoken'
 # Set the CSRF cookie domain
-CSRF_COOKIE_DOMAIN = [
-     "localhost:5174",
-    "localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:5173",
-     "https://backend.signupcasuals.com",
-    "backend.signupcasuals.com",
-    'https://manage.signupcasuals.com:8443',
-    "https://backend.signupcasuals.com",
-    'https://manage.signupcasuals.com',
-    'https://signupcasuals.com',
-    'https://signupbackend.knowbin.tech:8001',
-    'https://signupbackend.knowbin.tech',
-     "localhost",
-    "0.0.0.0",
-    "127.0.0.1",
-]
+CSRF_COOKIE_DOMAIN = ".signupcasuals.com"
 
 # Set the secure flag for the CSRF cookie (recommended for HTTPS)
 CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_DOMAIN = ".signupcasuals.com"
+SESSION_COOKIE_SECURE = True
 
 # Set the path for the CSRF cookie
 CSRF_COOKIE_PATH = '/'
