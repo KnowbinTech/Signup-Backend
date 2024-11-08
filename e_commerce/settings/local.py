@@ -4,32 +4,11 @@ DEBUG = os.environ.get('DEBUG')
 
 # INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
 
-ALLOWED_HOSTS = [
-    "localhost",
-    "0.0.0.0",
-    "127.0.0.1",
-    "localhost:8080",
-    "localhost:5173",
-    "127.0.0.1:5173",
-    "https://signupcasuals.com",
-    "https://manage.signupcasuals.com"
-]
+ALLOWED_HOSTS = ['*']
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080',
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    "https://signupcasuals.com",
-    "https://manage.signupcasuals.com"
-]
+CORS_ALLOWED_ORIGINS = ['*']
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8080',
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
-    "https://signupcasuals.com",
-    "https://manage.signupcasuals.com"
-]
+CSRF_TRUSTED_ORIGINS = ['*']
 
 SECURE_BROWSER_XSS_FILTER = True
 
@@ -40,7 +19,7 @@ DATABASES = {
         'USER': os.environ.get('DB_USER'),
         'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': 'localhost',
-        'PORT': '5433',
+        'PORT': '5432',
     }
 }
 
@@ -68,6 +47,8 @@ PHONE_PAY_S2S_CALLBACK_URL = os.environ.get('PHONE_PAY_S2S_CALLBACK_URL')
 PHONE_PAY_REDIRECT_URL = os.environ.get('PHONE_PAY_REDIRECT_URL')
 
 DELHIVERY_API_KEY = os.environ.get('DELHIVERY_API_KEY')
+
+URL_PREFIX = 'api/'
 
 
 
