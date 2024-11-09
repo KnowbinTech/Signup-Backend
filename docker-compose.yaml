@@ -26,10 +26,20 @@ services:
       - PHONE_PAY_S2S_CALLBACK_URL=https://manage.signupcasuals.com:8443/api/transaction/payment/callback/
       - PHONE_PAY_REDIRECT_URL=http://manage.signupcasuals.com:8443/api/transaction/payment/callback/
       - PORT=8001
-  
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             gunicorn your_project_name.wsgi:application --bind 0.0.0.0:8001
     volumes:
       - static_volume:/app/staticfiles
-
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"  # Expose port 80 for public access
+    volumes:
+      - static_volume:/static  # Map static files volume to Nginx
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf  # Use custom Nginx config
+    depends_on:
+      - web
 
 volumes:
   static_volume:
