@@ -26,9 +26,12 @@ services:
       - PHONE_PAY_S2S_CALLBACK_URL=https://manage.signupcasuals.com:8443/api/transaction/payment/callback/
       - PHONE_PAY_REDIRECT_URL=http://manage.signupcasuals.com:8443/api/transaction/payment/callback/
       - PORT=8001
-    command: >
-      sh -c "python manage.py collectstatic --noinput &&
-             gunicorn e_commerce.wsgi:application --bind 0.0.0.0:8001"
+    command:
+      - "bash"
+      - "-c"
+      - |
+        python manage.py collectstatic --noinput &&
+        gunicorn e_commerce.wsgi:application --bind 0.0.0.0:8001
     volumes:
       - static_volume:/app/staticfiles
   nginx:
