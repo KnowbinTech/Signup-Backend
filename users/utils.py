@@ -7,6 +7,8 @@ def get_userdata(user):
         'last_name': user.last_name,
         'email': user.email,
         'mobile_number': user.mobile_number,
+        'gender': user.gender,
+        'date_of_birth' : user.date_of_birth,
         'is_superuser': user.is_superuser,
         'is_customer': user.is_customer,
         'profile_picture': user.profile_picture.url if user.profile_picture else '',
