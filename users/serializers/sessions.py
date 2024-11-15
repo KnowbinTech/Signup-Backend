@@ -33,7 +33,7 @@ class ResetPassword(serializers.Serializer):
     new_password = serializers.CharField(required=True)
     confirm_password = serializers.CharField(required=True)
 
-    def clean(self, attrs):
+    def validate(self, attrs):
         from setup.middleware.request import CurrentRequestMiddleware
         username = CurrentRequestMiddleware.get_request().user.username
         old_password = attrs.get('old_password')
