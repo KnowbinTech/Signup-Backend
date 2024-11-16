@@ -17,12 +17,7 @@ class LogtoJWTAuthentication(JWTAuthentication):
         super().__init__()
 
     def decode_token(self, token):
-
-        print('self.jwks : ', self.jwks)
-
         alg = jwt.get_unverified_header(token).get('alg')
-
-        print('alg : ', alg)
 
         try:
 
