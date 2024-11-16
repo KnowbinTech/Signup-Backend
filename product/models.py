@@ -9,6 +9,7 @@ from .manager import VariantAttributesManager
 from .manager import ProductImageManager
 from .manager import CollectionItemsManager
 from .manager import LooBookItemsManager
+# from inventory.models import Tax
 
 
 class Products(BaseModel):
@@ -25,7 +26,7 @@ class Products(BaseModel):
     description = models.TextField(verbose_name='Description', blank=True, null=True)
     sku = models.CharField(max_length=50, blank=True, verbose_name='SKU')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Price') # MRP
-    gst=models.DecimalField(max_digits=5,decimal_places=2,verbose_name='Gst' , null=True) #GST
+    gst = models.ForeignKey('inventory.Tax', on_delete=models.SET_NULL, null=True, verbose_name='GST')
     selling_price = models.DecimalField(max_digits=10, decimal_places=2,default=0, verbose_name='Selling Price')
     # currency = models.CharField(max_length=3, default='INR',
     #                             verbose_name='Currency', null=True)  # [('USD', 'USD'), ('INR', 'INR')]
