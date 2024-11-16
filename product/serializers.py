@@ -17,6 +17,7 @@ from masterdata.serializers import CategoryGET
 from masterdata.serializers import BrandModelSerializerGET
 from masterdata.serializers import RetrieveDimensionModelSerializer
 from masterdata.serializers import RetrieveAttributeModelSerializer
+from inventory.serializers import TaxModelSerializerGET
 
 
 class ProductsModelSerializer(serializers.ModelSerializer):
@@ -106,6 +107,7 @@ class ProductsModelSerializerGET(serializers.ModelSerializer):
     created_by = serializers.SerializerMethodField()
     updated_by = serializers.SerializerMethodField()
     stock = serializers.SerializerMethodField()
+    gst=TaxModelSerializerGET()
 
     def get_stock(self, attrs):
         total_stock = attrs.product_variant.aggregate(total=Sum('stock'))['total']
