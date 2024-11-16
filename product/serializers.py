@@ -144,7 +144,8 @@ class VariantModelSerializer(serializers.ModelSerializer):
             for i in attributes:
                 product.variant.create(**{
                     'attributes_id': i['attribute'],
-                    'value': i['value']
+                    'value': i['value'],
+                    'name': i['name']
                 })
 
         for file in attachment:

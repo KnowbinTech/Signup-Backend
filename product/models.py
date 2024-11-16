@@ -109,6 +109,7 @@ class VariantAttributes(BaseModel):
         on_delete=models.CASCADE, verbose_name='Attributes'
     )
     value = models.CharField(max_length=256, verbose_name='Value')
+    name = models.CharField(max_length=256, verbose_name='Name')
 
     objects = VariantAttributesManager()
 
