@@ -24,7 +24,7 @@ class User(AbstractUser):
         ('Women', 'Women'),
         ('Prefer Not to say', 'Prefer Not to say'),
     )
-
+    sub = models.CharField(max_length=125)
     is_customer = models.BooleanField(default=False)
     customer_id = models.CharField(max_length=256, blank=True, null=True, verbose_name='Customer ID')
     mobile_number = models.CharField(null=True, max_length=15, verbose_name='Mobile Number')
@@ -37,6 +37,7 @@ class User(AbstractUser):
     is_suspended = models.BooleanField(default=False)
 
     store_manager = models.BooleanField(default=False)
+    other_information = models.JSONField(default={}, blank=True, null=True, verbose_name='Other Information')
 
     ########################################
     # BaseModel

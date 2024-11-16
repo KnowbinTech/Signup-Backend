@@ -168,3 +168,43 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             'email',
         )
 
+
+class NewUserSerializer(serializers.ModelSerializer):
+    ip = serializers.CharField()
+    event = serializers.CharField()
+    hookId = serializers.CharField()
+    sessionId = serializers.CharField()
+    userAgent = serializers.CharField()
+    application = serializers.CharField()
+    applicationId = serializers.CharField()
+    interactionEvent = serializers.CharField()
+    createdAt = serializers.DateTimeField()
+    data = serializers.JSONField()
+
+    class Meta:
+        model = User
+        fields = [
+            'ip',
+            'event',
+            'hookId',
+            'sessionId',
+            'userAgent',
+            'application',
+            'applicationId',
+            'interactionEvent',
+            'createdAt',
+            'data',
+        ]
+
+    def create(self, validated_data):
+        # create a new user here
+
+        data = validated_data.pop('data', None)
+
+        user = User.objects.create_user(**data)
+        return user
+
+
+
+
+
