@@ -17,6 +17,8 @@ from .user import ProfileUpdate
 
 from .store_manager import ManagerViewSet
 
+from .logto import LogtoUserCreateHooks
+
 
 
 
