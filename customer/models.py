@@ -177,6 +177,14 @@ class Return(BaseModel):
         verbose_name='Reason', null=True
     )
 
+    order = models.ForeignKey(
+        'orders.Order',  # or just Order if you've imported it
+        on_delete=models.SET_NULL,
+        related_name='order_returns',
+        null=True,
+        verbose_name='Order'
+    )
+    
     product = models.ForeignKey(
         Variant, on_delete=models.SET_NULL, related_name='return_product',
         verbose_name='Product', null=True
