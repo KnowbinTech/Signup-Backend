@@ -175,7 +175,7 @@ class NewUserSerializer(serializers.ModelSerializer):
     hookId = serializers.CharField()
     sessionId = serializers.CharField()
     userAgent = serializers.CharField()
-    application = serializers.CharField()
+    application = serializers.JSONField()
     applicationId = serializers.CharField()
     interactionEvent = serializers.CharField()
     createdAt = serializers.DateTimeField()
