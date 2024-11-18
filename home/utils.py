@@ -11,8 +11,8 @@ def calculate_retention_rate(start_date, end_date, obj):
             Order.ORDER_PLACED, Order.ORDER_PROCESSING, Order.PACKED,
             Order.READY_FOR_DISPATCH, Order.SHIPPED, Order.DELIVERED
         ],
-        purchase__purchase_date__range=(start_date, end_date)
-    ).distinct().count()
+        created_at__date__range=(start_date, end_date)
+    ).values('user').distinct().count()
 
     # Total number of unique customers at the start of the period
     total_customers_at_start = obj.count()
@@ -63,11 +63,24 @@ def order_processing_time():
 
 
 def order_return_rate():
-    # Count total number of orders
-    total_orders = Order.objects.count()
+    from customer.models import Return # Import here to avoid circular imports
+    # Count total number of orders with status beyond PENDING
+    total_orders = Order.objects.filter(
+        status__in=[
+            Order.ORDER_PLACED,
+            Order.ORDER_PROCESSING,
+            Order.PACKED,
+            Order.READY_FOR_DISPATCH,
+            Order.SHIPPED,
+            Order.DELIVERED
+        ]
+    ).count()
 
     # Count number of orders with associated completed returns
-    returned_orders = Order.objects.filter(return__isnull=False, return__status=Return.APPROVED).distinct().count()
+    returned_orders = Return.objects.filter(
+        status=Return.APPROVED, 
+        order__isnull=False
+        ).values('order').distinct().count()
 
     # Calculate order return rate (as percentage)
     if total_orders > 0:
@@ -75,7 +88,7 @@ def order_return_rate():
     else:
         return_rate_percentage = 0  # Default value if no orders exist
 
-    return return_rate_percentage
+    return round(return_rate_percentage, 2) # Round to 2 decimal places
 
 
 
