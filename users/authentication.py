@@ -36,7 +36,11 @@ class LogtoJWTAuthentication(JWTAuthentication):
 
     def authenticate(self, request):
         header = self.get_header(request)
-        raw_token = self.get_raw_token(header)
+        try:
+            raw_token = self.get_raw_token(header)
+        except Exception as e:
+            print('Exception : ', e)
+            raise AuthenticationFailed('Invalid token')
 
         if raw_token is None:
             return None
