@@ -60,7 +60,7 @@ class UserDataModelSerializer(serializers.ModelSerializer):
     profile_picture = serializers.SerializerMethodField()
 
     def get_profile_picture(self, attrs):
-        return attrs.profile_picture.url if attrs.profile_picture else ''
+        return attrs.profile_picture.url if attrs.profile_picture else attrs.profile_picture_url or ''
 
     class Meta:
         model = User
@@ -142,7 +142,7 @@ class UserModelSerializerGET(serializers.ModelSerializer):
         return str(attrs.updated_by if attrs.updated_by else '')
 
     def get_profile_picture(self, attrs):
-        return attrs.profile_picture.url if attrs.profile_picture else ''
+        return attrs.profile_picture.url if attrs.profile_picture else attrs.profile_picture_url or ''
 
     class Meta:
         model = User
@@ -197,11 +197,53 @@ class NewUserSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
+        ip = validated_data.get('ip', None)
+        event = validated_data.get('event', None)
+        hookId = validated_data.get('hookId', None)
+        sessionId = validated_data.get('sessionId', None)
+        userAgent = validated_data.get('userAgent', None)
+        application = validated_data.get('application', None)
+        applicationId = validated_data.get('applicationId', None)
+        interactionEvent = validated_data.get('interactionEvent', None)
+        createdAt = validated_data.get('createdAt', None)
+
         # create a new user here
 
         data = validated_data.pop('data', None)
 
-        user = User.objects.create_user(**data)
+        id = data.get('id')
+        name = data.get('name')
+        avatar = data.get('avatar')
+        username = data.get('username')
+        createdAt = data.get('createdAt')
+        customData = data.get('customData')
+        identities = data.get('identities')
+        isSuspended = data.get('isSuspended')
+        lastSignInAt = data.get('lastSignInAt')
+        primaryEmail = data.get('primaryEmail')
+        primaryPhone = data.get('primaryPhone')
+        applicationId = data.get('applicationId')
+
+        other_information = {
+            'ip': ip,
+            'event': event,
+            'hookId': hookId,
+            'sessionId': sessionId,
+            'userAgent': userAgent,
+            'application': application,
+            'applicationId': applicationId,
+            'interactionEvent': interactionEvent,
+            'createdAt': createdAt,
+            'customData': customData,
+            'identities': identities,
+        }
+
+        user = User.objects.create(
+            sub=id, first_name=name, email=primaryEmail, username=username,
+            profile_picture_url=avatar, created_at=createdAt, last_login=lastSignInAt,
+            is_suspended=isSuspended, mobile_number=primaryPhone,
+            other_information=other_information
+        )
         return user
 
 

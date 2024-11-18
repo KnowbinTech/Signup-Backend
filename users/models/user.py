@@ -33,6 +33,7 @@ class User(AbstractUser):
     gender = models.CharField(choices=GENDER, max_length=25, blank=True, null=True, verbose_name='Gender')
 
     profile_picture = models.FileField(upload_to='profile/', blank=True, null=True, verbose_name='Profile Picture')
+    profile_picture_url = models.URLField(max_length=500, blank=True, null=True)
 
     is_suspended = models.BooleanField(default=False)
 
