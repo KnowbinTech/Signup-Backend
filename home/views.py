@@ -77,13 +77,15 @@ class DashboardAPIView(APIView):
 
         customers = User.objects.filter(is_customer=True).count()
 
+        customers_queryset = User.objects.filter(is_customer=True)
+
         customers_details = {
-            'customers': customers.count(),
-            'new_customers': customers.filter(
+            'customers': customers_queryset.count(),
+            'new_customers': customers_queryset.filter(
                 created_at__date__gte=from_date,
                 created_at__date__lte=to_date
             ).count(),
-            'retention_rate': calculate_retention_rate(from_date, to_date, customers)
+            'retention_rate': calculate_retention_rate(from_date, to_date, customers_queryset)
         }
 
         # Aggregate total quantity sold for each product variant
@@ -112,9 +114,11 @@ class DashboardAPIView(APIView):
             if item['total_quantity_sold'] < low_sales_threshold  # Adjust condition based on sales volume or revenue
         ]
 
-        category_performance = OrderItem.objects.values('product_variant__product__category__name').annotate(
+        category_performance = OrderItem.objects.values('product_variant__product__categories__name').annotate(
             total_quantity_sold=Sum('quantity'),
             total_revenue=Sum('total_amount')
+        ).exclude(  # Add this to exclude None/null category names
+            product_variant__product__categories__name__isnull=True
         )
 
         return Response({
@@ -131,14 +135,14 @@ class DashboardAPIView(APIView):
                 'orders': {
                     'details': {
                         'PENDING': all_orders.filter(status=Order.PENDING).count(),
-                        'PAYMENT_INITIATED': all_orders.filter(status=Order.PENDING).count(),
-                        'ORDER_PLACED': all_orders.filter(status=Order.PENDING).count(),
-                        'ORDER_PROCESSING': all_orders.filter(status=Order.PENDING).count(),
-                        'PACKED': all_orders.filter(status=Order.PENDING).count(),
-                        'READY_FOR_DISPATCH': all_orders.filter(status=Order.PENDING).count(),
-                        'SHIPPED': all_orders.filter(status=Order.PENDING).count(),
-                        'DELIVERED': all_orders.filter(status=Order.PENDING).count(),
-                        'CANCELLED': all_orders.filter(status=Order.PENDING).count()
+                        'PAYMENT_INITIATED': all_orders.filter(status=Order.PAYMENT_INITIATED).count(),
+                        'ORDER_PLACED': all_orders.filter(status=Order.ORDER_PLACED).count(),
+                        'ORDER_PROCESSING': all_orders.filter(status=Order.ORDER_PROCESSING).count(),
+                        'PACKED': all_orders.filter(status=Order.PACKED).count(),
+                        'READY_FOR_DISPATCH': all_orders.filter(status=Order.READY_FOR_DISPATCH).count(),
+                        'SHIPPED': all_orders.filter(status=Order.SHIPPED).count(),
+                        'DELIVERED': all_orders.filter(status=Order.DELIVERED).count(),
+                        'CANCELLED': all_orders.filter(status=Order.CANCELLED).count()
                     },
                     'order_processing_time': order_processing_time(),
                     'order_return_rate': order_return_rate(),
