@@ -3,6 +3,7 @@ import django.contrib.auth.password_validation as validators
 from rest_framework import serializers
 from users.models.other import AddressRegister
 from users.models import User
+from users.utils import convert_timestamp_to_date_time
 
 
 class UserSignupModelSerializer(serializers.ModelSerializer):
@@ -176,9 +177,7 @@ class NewUserSerializer(serializers.ModelSerializer):
     sessionId = serializers.CharField()
     userAgent = serializers.CharField()
     application = serializers.JSONField()
-    applicationId = serializers.CharField()
     interactionEvent = serializers.CharField()
-    createdAt = serializers.DateTimeField()
     data = serializers.JSONField()
 
     class Meta:
@@ -203,9 +202,7 @@ class NewUserSerializer(serializers.ModelSerializer):
         sessionId = validated_data.get('sessionId', None)
         userAgent = validated_data.get('userAgent', None)
         application = validated_data.get('application', None)
-        applicationId = validated_data.get('applicationId', None)
         interactionEvent = validated_data.get('interactionEvent', None)
-        createdAt = validated_data.get('createdAt', None)
 
         # create a new user here
 
@@ -215,14 +212,15 @@ class NewUserSerializer(serializers.ModelSerializer):
         name = data.get('name')
         avatar = data.get('avatar')
         username = data.get('username')
-        createdAt = data.get('createdAt')
-        customData = data.get('customData')
+        custom_data = data.get('customData')
         identities = data.get('identities')
-        isSuspended = data.get('isSuspended')
-        lastSignInAt = data.get('lastSignInAt')
-        primaryEmail = data.get('primaryEmail')
-        primaryPhone = data.get('primaryPhone')
-        applicationId = data.get('applicationId')
+        is_suspended = data.get('isSuspended')
+        primary_email = data.get('primaryEmail')
+        primary_phone = data.get('primaryPhone')
+        application_id = data.get('applicationId')
+
+        created_at = convert_timestamp_to_date_time(data.get('createdAt'))
+        last_sign_in_at = convert_timestamp_to_date_time(data.get('lastSignInAt'))
 
         other_information = {
             'ip': ip,
@@ -231,17 +229,17 @@ class NewUserSerializer(serializers.ModelSerializer):
             'sessionId': sessionId,
             'userAgent': userAgent,
             'application': application,
-            'applicationId': applicationId,
+            'applicationId': application_id,
             'interactionEvent': interactionEvent,
-            'createdAt': createdAt,
-            'customData': customData,
+            'createdAt': created_at,
+            'customData': custom_data,
             'identities': identities,
         }
 
         user = User.objects.create(
-            sub=id, first_name=name, email=primaryEmail, username=username,
-            profile_picture_url=avatar, created_at=createdAt, last_login=lastSignInAt,
-            is_suspended=isSuspended, mobile_number=primaryPhone,
+            sub=id, first_name=name, email=primary_email, username=username,
+            profile_picture_url=avatar, created_at=created_at, last_login=last_sign_in_at,
+            is_suspended=is_suspended, mobile_number=primary_phone,
             other_information=other_information
         )
         return user

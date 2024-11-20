@@ -13,3 +13,10 @@ def get_userdata(user):
         'last_login': user.last_login,
     }
 
+
+def convert_timestamp_to_date_time(timestamp):
+    import datetime
+    if timestamp:
+        return datetime.datetime.fromtimestamp(timestamp)
+
+    return timestamp
