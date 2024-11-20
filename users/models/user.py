@@ -25,8 +25,11 @@ class User(AbstractUser):
         ('Prefer Not to say', 'Prefer Not to say'),
     )
     # Override default fields to make them optional
-    first_name = models.CharField(max_length=150, blank=True, null=True)
-    last_name = models.CharField(max_length=150, blank=True, null=True)
+    first_name = None
+    last_name = None
+
+    # Replace first_name and last_name with a single name field
+    name = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(blank=True, null=True, verbose_name='Email')
 
     sub = models.CharField(max_length=125)
@@ -72,8 +75,11 @@ class User(AbstractUser):
     class Meta(AbstractUser.Meta):
         pass
 
+    def get_full_name(self):
+        return self.name if self.name else self.username
+
     def __str__(self):
-        return self.get_full_name() if self.first_name else self.username
+        return self.get_full_name()
 
     def save(self, *args, **kwargs):
         if self.is_customer and not self.customer_id:

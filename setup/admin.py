@@ -24,8 +24,8 @@ class ListAdminMixin(object):
         """
 
         if model.__name__ == 'User':
-            self.list_display = ["username", "first_name", "mobile_number", "is_superuser", "is_customer"]
-            self.search_fields = ["username", 'mobile_number', 'first_name']
+            self.list_display = ["username", "name", "mobile_number", "is_superuser", "is_customer"]
+            self.search_fields = ["username", 'mobile_number', 'name']
         else:
             """ Set list_display excluding 'id' fields from foreign keys """
             self.list_display = [

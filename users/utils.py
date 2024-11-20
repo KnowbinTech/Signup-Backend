@@ -3,8 +3,7 @@
 def get_userdata(user):
     return {
         'username': user.username,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
+        'name': user.name,
         'email': user.email,
         'mobile_number': user.mobile_number,
         'is_superuser': user.is_superuser,

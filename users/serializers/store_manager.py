@@ -8,8 +8,7 @@ class StoreManagerModelSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'username',
-            'first_name',
-            'last_name',
+            'name',
             'email',
             'mobile_number',
             'date_of_birth',

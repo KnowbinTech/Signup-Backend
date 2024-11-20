@@ -13,8 +13,7 @@ class UserSignupModelSerializer(serializers.ModelSerializer):
             'username',
             'password',
 
-            'first_name',
-            'last_name',
+            'name',
             'email',
             'mobile_number',
             'date_of_birth',
@@ -68,8 +67,7 @@ class UserDataModelSerializer(serializers.ModelSerializer):
         fields = (
             'username',
 
-            'first_name',
-            'last_name',
+            'name',
             'email',
             'mobile_number',
             'date_of_birth',
@@ -160,8 +158,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'username',
-            'first_name',
-            'last_name',
+            'name',
             'mobile_number',
             'date_of_birth',
             'gender',
@@ -235,10 +232,10 @@ class NewUserSerializer(serializers.ModelSerializer):
         }
 
         user = User.objects.create(
-            sub=id, first_name=name, email=primary_email, username=username,
+            sub=id, name=name, email=primary_email, username=username,
             profile_picture_url=avatar, created_at=created_at, last_login=last_sign_in_at,
             is_suspended=is_suspended, mobile_number=primary_phone,
-            other_information=other_information
+            other_information=other_information, is_customer=True
         )
         return user
 
