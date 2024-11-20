@@ -229,7 +229,7 @@ class NewUserSerializer(serializers.ModelSerializer):
             'application': application,
             'applicationId': application_id,
             'interactionEvent': interactionEvent,
-            'createdAt': created_at,
+            'createdAt': created_at.strftime('%Y-%m-%d %H:%M:%s'),
             'customData': custom_data,
             'identities': identities,
         }
