@@ -24,6 +24,11 @@ class User(AbstractUser):
         ('Women', 'Women'),
         ('Prefer Not to say', 'Prefer Not to say'),
     )
+    # Override default fields to make them optional
+    first_name = models.CharField(max_length=150, blank=True, null=True)
+    last_name = models.CharField(max_length=150, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True, verbose_name='Email')
+
     sub = models.CharField(max_length=125)
     is_customer = models.BooleanField(default=False)
     customer_id = models.CharField(max_length=256, blank=True, null=True, verbose_name='Customer ID')
