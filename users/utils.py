@@ -17,6 +17,7 @@ def get_userdata(user):
 def convert_timestamp_to_date_time(timestamp):
     import datetime
     if timestamp:
-        return datetime.datetime.fromtimestamp(timestamp)
+        updated_timestamp = timestamp / 1000
+        return datetime.datetime.fromtimestamp(updated_timestamp)
 
     return timestamp
