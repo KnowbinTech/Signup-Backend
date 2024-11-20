@@ -20,7 +20,8 @@ urlpatterns = [
     path('user/sign-up/', views.Signup.as_view(), name='user-signup'),
     path('user/change-password/', views.ChangePassword.as_view(), name='change-password'),
     path('user/me/', views.Me.as_view(), name='me'),
-    path('user/prolile-update/', views.ProfileUpdate.as_view(), name='prolile-update'),
+    path('user/prolile-update/', views.ProfileUpdate.as_view(), name='profile-update'),
+    path('user/user-signed-up/', views.LogtoUserCreateHooks.as_view(), name='user-signed-up'),
 
     path(
         'session/', include(([

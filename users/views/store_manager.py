@@ -9,11 +9,11 @@ class ManagerViewSet(BaseModelViewSet):
     serializer_class = StoreManagerModelSerializer
     retrieve_serializer_class = UserModelSerializerGET
     default_fields = [
-        'username', 'first_name', 'last_name',
+        'username', 'name', 'last_name',
         'email', 'mobile_number'
     ]
     search_fields = [
-        'username', 'first_name', 'email', 'mobile_number'
+        'username', 'name', 'email', 'mobile_number'
     ]
 
     # def perform_db_action(self, serializer, action='create'):

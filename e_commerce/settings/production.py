@@ -9,6 +9,7 @@ ALLOWED_HOSTS = [
     "manage.signupcasuals.com",
     "signupcasuals.com",
     "signupbackend.knowbin.tech",
+    "rahuldev.signupcasuals.com",
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -16,6 +17,7 @@ CORS_ALLOWED_ORIGINS = [
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
     'https://signupbackend.knowbin.tech',
+    'https://rahuldev.signupcasuals.com',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -23,6 +25,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
     'https://signupbackend.knowbin.tech',
+    'https://rahuldev.signupcasuals.com',
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -31,6 +34,7 @@ CORS_ORIGIN_WHITELIST = [
     'https://signupcasuals.com',
     'https://signupbackend.knowbin.tech:8001',
     'https://signupbackend.knowbin.tech',
+    'https://rahuldev.signupcasuals.com',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False

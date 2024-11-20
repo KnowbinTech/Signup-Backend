@@ -3,6 +3,7 @@ import django.contrib.auth.password_validation as validators
 from rest_framework import serializers
 from users.models.other import AddressRegister
 from users.models import User
+from users.utils import convert_timestamp_to_date_time
 
 
 class UserSignupModelSerializer(serializers.ModelSerializer):
@@ -12,8 +13,7 @@ class UserSignupModelSerializer(serializers.ModelSerializer):
             'username',
             'password',
 
-            'first_name',
-            'last_name',
+            'name',
             'email',
             'mobile_number',
             'date_of_birth',
@@ -60,15 +60,14 @@ class UserDataModelSerializer(serializers.ModelSerializer):
     profile_picture = serializers.SerializerMethodField()
 
     def get_profile_picture(self, attrs):
-        return attrs.profile_picture.url if attrs.profile_picture else ''
+        return attrs.profile_picture.url if attrs.profile_picture else attrs.profile_picture_url or ''
 
     class Meta:
         model = User
         fields = (
             'username',
 
-            'first_name',
-            'last_name',
+            'name',
             'email',
             'mobile_number',
             'date_of_birth',
@@ -142,7 +141,7 @@ class UserModelSerializerGET(serializers.ModelSerializer):
         return str(attrs.updated_by if attrs.updated_by else '')
 
     def get_profile_picture(self, attrs):
-        return attrs.profile_picture.url if attrs.profile_picture else ''
+        return attrs.profile_picture.url if attrs.profile_picture else attrs.profile_picture_url or ''
 
     class Meta:
         model = User
@@ -159,12 +158,88 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             'username',
-            'first_name',
-            'last_name',
+            'name',
             'mobile_number',
             'date_of_birth',
             'gender',
             'profile_picture',
             'email',
         )
+
+
+class NewUserSerializer(serializers.ModelSerializer):
+    ip = serializers.CharField()
+    event = serializers.CharField()
+    hookId = serializers.CharField()
+    sessionId = serializers.CharField()
+    userAgent = serializers.CharField()
+    application = serializers.JSONField()
+    interactionEvent = serializers.CharField()
+    data = serializers.JSONField()
+
+    class Meta:
+        model = User
+        fields = [
+            'ip',
+            'event',
+            'hookId',
+            'sessionId',
+            'userAgent',
+            'application',
+            'interactionEvent',
+            'data',
+        ]
+
+    def create(self, validated_data):
+        ip = validated_data.get('ip', None)
+        event = validated_data.get('event', None)
+        hookId = validated_data.get('hookId', None)
+        sessionId = validated_data.get('sessionId', None)
+        userAgent = validated_data.get('userAgent', None)
+        application = validated_data.get('application', None)
+        interactionEvent = validated_data.get('interactionEvent', None)
+
+        # create a new user here
+
+        data = validated_data.pop('data', None)
+
+        id = data.get('id')
+        name = data.get('name')
+        avatar = data.get('avatar')
+        username = data.get('username')
+        custom_data = data.get('customData')
+        identities = data.get('identities')
+        is_suspended = data.get('isSuspended')
+        primary_email = data.get('primaryEmail')
+        primary_phone = data.get('primaryPhone')
+        application_id = data.get('applicationId')
+
+        created_at = convert_timestamp_to_date_time(data.get('createdAt'))
+        last_sign_in_at = convert_timestamp_to_date_time(data.get('lastSignInAt'))
+
+        other_information = {
+            'ip': ip,
+            'event': event,
+            'hookId': hookId,
+            'sessionId': sessionId,
+            'userAgent': userAgent,
+            'application': application,
+            'applicationId': application_id,
+            'interactionEvent': interactionEvent,
+            'createdAt': created_at.strftime('%Y-%m-%d %H:%M:%s'),
+            'customData': custom_data,
+            'identities': identities,
+        }
+
+        user = User.objects.create(
+            sub=id, name=name, email=primary_email, username=username,
+            profile_picture_url=avatar, created_at=created_at, last_login=last_sign_in_at,
+            is_suspended=is_suspended, mobile_number=primary_phone,
+            other_information=other_information, is_customer=True
+        )
+        return user
+
+
+
+
 

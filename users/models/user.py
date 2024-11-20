@@ -24,7 +24,15 @@ class User(AbstractUser):
         ('Women', 'Women'),
         ('Prefer Not to say', 'Prefer Not to say'),
     )
+    # Override default fields to make them optional
+    first_name = None
+    last_name = None
 
+    # Replace first_name and last_name with a single name field
+    name = models.CharField(max_length=255, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True, verbose_name='Email')
+
+    sub = models.CharField(max_length=125)
     is_customer = models.BooleanField(default=False)
     customer_id = models.CharField(max_length=256, blank=True, null=True, verbose_name='Customer ID')
     mobile_number = models.CharField(null=True, max_length=15, verbose_name='Mobile Number')
@@ -33,10 +41,12 @@ class User(AbstractUser):
     gender = models.CharField(choices=GENDER, max_length=25, blank=True, null=True, verbose_name='Gender')
 
     profile_picture = models.FileField(upload_to='profile/', blank=True, null=True, verbose_name='Profile Picture')
+    profile_picture_url = models.URLField(max_length=500, blank=True, null=True)
 
     is_suspended = models.BooleanField(default=False)
 
     store_manager = models.BooleanField(default=False)
+    other_information = models.JSONField(default={}, blank=True, null=True, verbose_name='Other Information')
 
     ########################################
     # BaseModel
@@ -65,8 +75,11 @@ class User(AbstractUser):
     class Meta(AbstractUser.Meta):
         pass
 
+    def get_full_name(self):
+        return self.name if self.name else self.username
+
     def __str__(self):
-        return self.get_full_name() if self.first_name else self.username
+        return self.get_full_name()
 
     def save(self, *args, **kwargs):
         if self.is_customer and not self.customer_id:

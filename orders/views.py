@@ -149,7 +149,7 @@ class OrderModelViewSet(GenericViewSet, ListModelMixin, ExportData):
     ]
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = OrderFiler
-    search_fields = ['order_id', 'status', 'cart__user__first_name', 'cart__user__last_name']
+    search_fields = ['order_id', 'status', 'cart__user__name', 'cart__user__last_name']
 
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
