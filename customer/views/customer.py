@@ -51,7 +51,7 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
     serializer_class = ProductsModelSerializerGET
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = CustomerProductFilter
-    search_fields = ['name', 'brand']
+    search_fields = ['name', 'brand__name']
 
     @action(detail=True, methods=['GET'], url_path='other-variants')
     def other_variants(self, request, *args, **kwargs):
