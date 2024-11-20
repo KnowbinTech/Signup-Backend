@@ -189,9 +189,7 @@ class NewUserSerializer(serializers.ModelSerializer):
             'sessionId',
             'userAgent',
             'application',
-            'applicationId',
             'interactionEvent',
-            'createdAt',
             'data',
         ]
 
