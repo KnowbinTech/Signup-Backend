@@ -52,6 +52,7 @@ INSTALLED_APPS += [
 
     'dynamic_preferences',
     'dynamic_preferences.users.apps.UserPreferencesConfig',
+    'storages',
 ]
 
 # Documentation
@@ -265,3 +266,10 @@ CSRF_TRUSTED_ORIGINS = [
 URL_PREFIX = ''
 
 DATE_FORMAT = ['%Y-%m-%d', '%d-%m-%Y']
+
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID') 
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY') 
+AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_ENDPOINT_URL = 'https://s3.wasabisys.com'  
+AWS_S3_REGION_NAME = 'ap-northeast-1' 
+AWS_QUERYSTRING_AUTH = False 

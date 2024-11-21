@@ -7,11 +7,12 @@ from .models import Attribute
 from .models import AttributeGroup
 from .models import Dimension
 from .models import ReturnReason
+from setup.utils import generate_presigned_url
 
 
 class BrandModelSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
-    logo = serializers.FileField(required=False)
+    logo = serializers.CharField(required=False)
     description = serializers.CharField(required=True)
     is_active = serializers.BooleanField(default=True)
     tags = serializers.ListField(child=serializers.CharField(), required=False, allow_null=True, allow_empty=True)
@@ -59,7 +60,10 @@ class BrandModelSerializerGET(serializers.ModelSerializer):
         return str(attrs.updated_by if attrs.updated_by else '')
 
     def get_logo(self, attrs):
-        return attrs.logo.url if attrs.logo else ''
+        key = attrs.logo if attrs.logo else ''
+        result = generate_presigned_url(key)
+        url = result["url"]
+        return url
 
     class Meta:
         model = Brand

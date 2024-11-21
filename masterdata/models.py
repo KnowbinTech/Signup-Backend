@@ -52,7 +52,7 @@ class Dimension(BaseModel):
 
 class Brand(BaseModel):
     name = models.CharField(max_length=75, blank=True, null=True, verbose_name='Name', db_index=True)
-    logo = models.FileField(upload_to='brand/logo', blank=True, null=True, verbose_name='Logo')
+    logo = models.CharField(max_length=300, blank=True, null=True, verbose_name='Logo')
     description = models.TextField(blank=True, null=True, verbose_name='Description')
     is_active = models.BooleanField(default=True, verbose_name='Active')
     tags = ArrayField(models.CharField(max_length=100, blank=True, null=True), blank=True, null=True, default=list, verbose_name='Tags')
