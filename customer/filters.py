@@ -6,6 +6,7 @@ from product.models import Variant
 from product.models import Collection
 from product.models import LookBook
 from masterdata.models import Category
+from customer.models import WishList
 from customer.models import Return
 from customer.models import Review
 
@@ -100,3 +101,8 @@ class CustomerOrderFilter(filters.FilterSet):
     class Meta:
         model = Order
         fields = ['order_id']
+
+class wishListFilter(filters.FilterSet):
+    class Meta:
+        model = WishList
+        fields = ['user__username']

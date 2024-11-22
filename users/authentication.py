@@ -58,9 +58,16 @@ class LogtoJWTAuthentication(JWTAuthentication):
         user_id = validated_token.get(user_id_claim)
 
         try:
+            userobj = User.objects.all()
             user = User.objects.get(**{user_id_field: user_id})
             return user
         except User.DoesNotExist:
+            print('calling an e')
             raise AuthenticationFailed('Invalid token')
+
+        except Exception as e:
+            print('Exception : ', e)
+            raise AuthenticationFailed('Invalid token')
+
 
 

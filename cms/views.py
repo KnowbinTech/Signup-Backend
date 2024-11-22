@@ -11,6 +11,7 @@ from .models import HeroSection
 from .filters import HeroSectionFilter
 from .serializers import HeroSectionModelSerializer
 from .serializers import HeroSectionModelSerializerGET
+from rest_framework.authentication import SessionAuthentication
 
 
 class HeroSectionModelViewSet(BaseModelViewSet, ExportData):
@@ -25,6 +26,7 @@ class HeroSectionModelViewSet(BaseModelViewSet, ExportData):
 
 
 class HeroSectionCustomer(GenericViewSet, ListModelMixin):
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     queryset = HeroSection.objects.all().order_by('-id')
     serializer_class = HeroSectionModelSerializerGET

@@ -3,6 +3,7 @@ from django.contrib.auth import logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from users.serializers import UserSignupModelSerializer
@@ -16,6 +17,7 @@ class Signup(APIView):
     """
         API For Signup the customer to our site
     """
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     serializer_class = UserSignupModelSerializer
 
@@ -42,6 +44,7 @@ class Signup(APIView):
 
 
 class Login(APIView):
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
