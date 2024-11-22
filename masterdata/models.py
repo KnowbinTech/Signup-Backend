@@ -93,7 +93,7 @@ class Category(BaseModel):
         on_delete=models.SET_NULL, blank=True, null=True
     )
 
-    image = models.FileField(upload_to='category/images', blank=True, null=True, verbose_name='Image')
+    image = models.CharField(max_length=300, blank=True, null=True, verbose_name='image')
 
     is_main_menu = models.BooleanField(default=False, verbose_name='Main Menu')
     is_top_category = models.BooleanField(default=False, verbose_name='Top Category')

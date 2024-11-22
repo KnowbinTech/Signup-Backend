@@ -208,6 +208,7 @@ class RetrieveDimensionModelSerializer(serializers.ModelSerializer):
 class CategoryModelSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     description = serializers.CharField()
+    image = serializers.CharField(required=False)
     handle = serializers.CharField()
     tags = serializers.ListField(child=serializers.CharField(), required=False, allow_null=True, allow_empty=True)
 
@@ -275,7 +276,11 @@ class CategoryModelSerializerGET(serializers.ModelSerializer):
         return str(attrs.updated_by if attrs.updated_by else '')
 
     def get_image(self, attrs):
-        return attrs.image.url if attrs.image else ''
+        key = attrs.image if attrs.image else ''
+        result = generate_presigned_url(key)
+        url = result["url"]
+        return url
+
 
     def get_sub_category(self, attrs):
         return CategoryModelSerializerGET(attrs.subcategory.all(), many=True).data
