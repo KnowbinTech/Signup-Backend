@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
+import json
 
 from setup.views import BaseModelViewSet
 from setup.export import ExportData
@@ -189,6 +190,24 @@ class VariantModelViewSet(BaseModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
+
+        existing_images = request.data.get('existing_images', [])
+        if existing_images:
+            existing_images = json.loads(existing_images)
+            # Remove images not in the existing list
+            instance.variant_images.exclude(id__in=existing_images).delete()
+        
+        # Handle new images
+        new_images = request.FILES.getlist('images', [])
+        for file in new_images:
+            compressed_image = compress_image(file)
+            img_obj = instance.variant_images.create(
+                image=file,
+                name=file.name,
+            )
+            img_obj.thumbnail.save(f"thumbnail_{file.name}", compressed_image)
+            img_obj.save()
+
         attributes = serializer.validated_data.pop('attributes', None)
         obj = self.perform_db_action(serializer)
 
