@@ -58,7 +58,6 @@ class LogtoJWTAuthentication(JWTAuthentication):
         user_id = validated_token.get(user_id_claim)
 
         try:
-            userobj = User.objects.all()
             user = User.objects.get(**{user_id_field: user_id})
             return user
         except User.DoesNotExist:
