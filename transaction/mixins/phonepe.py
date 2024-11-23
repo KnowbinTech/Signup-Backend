@@ -60,7 +60,7 @@ class PhonePe:
         return {
             'headers': headers,
             'post_data': {'request': base64_string},
-            'action': self.POST_ACTION_URL + self.END_POINT,
+            'action': self.PROD_POST_ACTION_URL + self.END_POINT,
             'method': 'post'
         }
 
