@@ -12,7 +12,7 @@ from setup.utils import generate_presigned_url
 
 class BrandModelSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
-    logo = serializers.CharField(required=False)
+    logo = serializers.FileField(required=False)
     description = serializers.CharField(required=True)
     is_active = serializers.BooleanField(default=True)
     tags = serializers.ListField(child=serializers.CharField(), required=False, allow_null=True, allow_empty=True)
@@ -60,10 +60,7 @@ class BrandModelSerializerGET(serializers.ModelSerializer):
         return str(attrs.updated_by if attrs.updated_by else '')
 
     def get_logo(self, attrs):
-        key = attrs.logo if attrs.logo else ''
-        result = generate_presigned_url(key)
-        url = result["url"]
-        return url
+        return attrs.logo.url if attrs.logo else ''
 
     class Meta:
         model = Brand
@@ -208,7 +205,7 @@ class RetrieveDimensionModelSerializer(serializers.ModelSerializer):
 class CategoryModelSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     description = serializers.CharField()
-    image = serializers.CharField(required=False)
+    image = serializers.FileField(required=False)
     handle = serializers.CharField()
     tags = serializers.ListField(child=serializers.CharField(), required=False, allow_null=True, allow_empty=True)
 
@@ -276,10 +273,7 @@ class CategoryModelSerializerGET(serializers.ModelSerializer):
         return str(attrs.updated_by if attrs.updated_by else '')
 
     def get_image(self, attrs):
-        key = attrs.image if attrs.image else ''
-        result = generate_presigned_url(key)
-        url = result["url"]
-        return url
+        return attrs.image.url if attrs.image else ''
 
 
     def get_sub_category(self, attrs):
