@@ -28,6 +28,8 @@ from .serializers import ReturnReasonModelSerializerGET
 from .filters import CategoryFilter
 from .filters import BrandFilter
 from .filters import AttributeGroupFilter
+from setup.utils import upload_image_to_wasabi
+
 
 
 class CategoryModelViewSet(BaseModelViewSet, ExportData):
@@ -40,6 +42,33 @@ class CategoryModelViewSet(BaseModelViewSet, ExportData):
         'second_parent_category', 'attribute_group'
     ]
     filterset_class = CategoryFilter
+
+    @action(detail=False, methods=['post'], url_path='create_record')
+    def create_record(self, request, *args, **kwargs):
+        """
+        Handles the creation of a new record, including logo upload.
+
+        Parameters:
+            request (HttpRequest): The HTTP request object containing model data.
+
+        Returns:
+            Response: A DRF Response object with the creation status.
+        """
+        serializer = self.get_serializer(data=request.data)
+        image = request.data.get('image')
+
+        if image:
+            # Upload the logo to Wasabi
+            image_url = upload_image_to_wasabi(image)  # Call the global function
+            if image_url:
+                # Append the URL to the serializer data
+                key = image_url['key']
+                serializer.initial_data['image'] = key
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_db_action(serializer, 'create')
+
+        return Response(serializer.data, status=201)
 
     @action(detail=True, methods=['POST'], url_path='deactivate')
     def deactivate(self, request, *args, **kwargs):
@@ -67,6 +96,33 @@ class BrandModelViewSet(BaseModelViewSet, ExportData):
     search_fields = ['name']
     default_fields = ['name', 'description']
     filterset_class = BrandFilter
+
+    @action(detail=False, methods=['post'], url_path='create_record')
+    def create_record(self, request, *args, **kwargs):
+        """
+        Handles the creation of a new record, including logo upload.
+
+        Parameters:
+            request (HttpRequest): The HTTP request object containing model data.
+
+        Returns:
+            Response: A DRF Response object with the creation status.
+        """
+        serializer = self.get_serializer(data=request.data)
+        logo = request.data.get('logo')
+
+        if logo:
+            # Upload the logo to Wasabi
+            logo_url = upload_image_to_wasabi(logo)  # Call the global function
+            if logo_url:
+                # Append the URL to the serializer data
+                key = logo_url['key']
+                serializer.initial_data['logo'] = key
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_db_action(serializer, 'create')
+
+        return Response(serializer.data, status=201)
 
     @action(detail=True, methods=['POST'], url_path='deactivate')
     def deactivate(self, request, *args, **kwargs):
