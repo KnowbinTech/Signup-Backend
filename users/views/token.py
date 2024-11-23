@@ -3,12 +3,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import AllowAny
+from rest_framework.authentication import SessionAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from users.serializers import LoginTokenSerializer
 from users.utils import get_userdata
 
 
 class TokenLoginAPTView(GenericAPIView):
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     serializer_class = LoginTokenSerializer
 
@@ -31,6 +33,7 @@ class TokenLoginAPTView(GenericAPIView):
 
 
 class LoginStatus(APIView):
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     authentication_classes = (JWTAuthentication,)
 

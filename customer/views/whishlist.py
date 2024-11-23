@@ -5,6 +5,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
+
 
 from setup.permissions import IsCustomer
 
@@ -12,12 +15,16 @@ from customer.models import WishList
 
 from customer.serializers.serializers import WishListModelSerializer
 from customer.serializers.serializers import WishListGETSerializer
+from customer.filters import wishListFilter
 
 
 class WishListModelViewSet(GenericViewSet, ListModelMixin):
     permission_classes = (IsAuthenticated, IsCustomer,)
     queryset = WishList.objects.all()
     serializer_class = WishListGETSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    filterset_class = wishListFilter
+    search_fields = ['name', 'brand__name']
 
     @action(detail=False, methods=['POST'], url_path='add-to-wishlist', serializer_class=WishListModelSerializer)
     def add_to_wishlist(self, request, *args, **kwargs):

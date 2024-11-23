@@ -34,6 +34,7 @@ from customer.filters import CustomerCategoryFilter
 from customer.filters import CustomerCollectionFilter
 from customer.filters import CustomerLookBookFilter
 from customer.filters import CustomerOrderFilter
+from rest_framework.authentication import SessionAuthentication
 
 
 class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
@@ -46,6 +47,7 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
         Returns:
             Response: A DRF Response object with the variant product data.
     """
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     queryset = Products.objects.all()
     serializer_class = ProductsModelSerializerGET
@@ -75,6 +77,7 @@ class CustomerVariantViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
         Returns:
             Response: A DRF Response object with the variant product data.
     """
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     queryset = Variant.objects.filter(product__deleted=False)
     serializer_class = VariantModelSerializerGET
@@ -110,7 +113,7 @@ class CustomerCategoryViewSet(GenericViewSet, ListModelMixin):
         Returns:
             Response: A DRF Response object with the category data.
     """
-
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     queryset = Category.objects.filter(parent_category__isnull=True).order_by('name')
     serializer_class = CategoryModelSerializerGET
@@ -129,6 +132,7 @@ class CustomerCollectionViewSet(GenericViewSet, ListModelMixin):
         Returns:
             Response: A DRF Response object with the collection data.
     """
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     queryset = Collection.objects.all()
     serializer_class = CollectionModelSerializerGET
@@ -147,6 +151,7 @@ class CustomerLookBookViewSet(GenericViewSet, ListModelMixin):
         Returns:
             Response: A DRF Response object with the look book data.
     """
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     queryset = LookBook.objects.all()
     serializer_class = LookBookModelSerializerGET

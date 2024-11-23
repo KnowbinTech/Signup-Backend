@@ -3,6 +3,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.viewsets import GenericViewSet
@@ -58,6 +59,7 @@ class TransactionAPIView(APIView):
 
 
 class TransactionCallBackAPIView(APIView):
+    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
@@ -72,10 +74,6 @@ class TransactionCallBackAPIView(APIView):
         """
         form_data = request.data
         transaction_id = form_data.get('transactionId', None)
-
-        print('------------------------------------------')
-        print('form_data : ', form_data)
-        print('------------------------------------------')
 
         if transaction_id:
             response = PhonePe().check_payment_status(transaction_id)
