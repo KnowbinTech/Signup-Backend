@@ -19,6 +19,8 @@ from masterdata.serializers import RetrieveDimensionModelSerializer
 from masterdata.serializers import RetrieveAttributeModelSerializer
 from inventory.serializers import TaxModelSerializerGET
 
+from setup.utils import generate_presigned_url
+
 
 class ProductsModelSerializer(serializers.ModelSerializer):
     short_description = serializers.CharField()
@@ -237,6 +239,7 @@ class ProductImageModelSerializer(serializers.ModelSerializer):
 
 class CollectionModelSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(child=serializers.CharField(), required=False, allow_null=True, allow_empty=True)
+    feature_image=serializers.CharField(required=False)
 
     def validate(self, attrs):
         name = attrs.get('name')
@@ -285,7 +288,10 @@ class CollectionModelSerializerGET(serializers.ModelSerializer):
         return CollectionItemsModelSerializerGET(attrs.collection_items.all(), many=True).data
 
     def get_feature_image(self, attrs):
-        return attrs.feature_image.url if attrs.feature_image else ''
+        key = attrs.feature_image if attrs.feature_image else ''
+        result = generate_presigned_url(key)
+        url = result["url"]
+        return url
 
     class Meta:
         model = Collection
