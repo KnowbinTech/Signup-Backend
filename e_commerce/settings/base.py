@@ -272,4 +272,13 @@ AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
 AWS_S3_ENDPOINT_URL = os.getenv('AWS_S3_ENDPOINT_URL')  
 AWS_S3_REGION_NAME = os.getenv('AWS_S3_REGION_NAME')
-AWS_QUERYSTRING_AUTH = False 
+AWS_QUERYSTRING_AUTH = True # Optional: Makes media URLs public without signed URLs
+
+# Static files storage
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Media files storage
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# AWS_LOCATION = 'media'  # E.g., "media" or "static"
+AWS_S3_FILE_OVERWRITE = False  # To prevent overwriting files with the same name
