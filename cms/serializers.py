@@ -6,7 +6,7 @@ from setup.utils import generate_presigned_url
 
 
 class HeroSectionModelSerializer(serializers.ModelSerializer):
-    image = serializers.CharField(required=False)
+    image = serializers.FileField(required=False)
 
     class Meta:
         model = HeroSection
@@ -31,10 +31,7 @@ class HeroSectionModelSerializerGET(serializers.ModelSerializer):
         return str(attrs.updated_by if attrs.updated_by else '')
 
     def get_image(self, attrs):
-        key = attrs.image if attrs.image else ''
-        result = generate_presigned_url(key)
-        url = result["url"]
-        return url
+        return attrs.image.url if attrs.image else ''
 
     class Meta:
         model = HeroSection
