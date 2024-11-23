@@ -2,9 +2,11 @@ from rest_framework import serializers
 
 from .models import HeroSection
 
+from setup.utils import generate_presigned_url
+
 
 class HeroSectionModelSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(required=False)
+    image = serializers.CharField(required=False)
 
     class Meta:
         model = HeroSection
@@ -29,7 +31,10 @@ class HeroSectionModelSerializerGET(serializers.ModelSerializer):
         return str(attrs.updated_by if attrs.updated_by else '')
 
     def get_image(self, attrs):
-        return attrs.image.url if attrs.image else ''
+        key = attrs.image if attrs.image else ''
+        result = generate_presigned_url(key)
+        url = result["url"]
+        return url
 
     class Meta:
         model = HeroSection
