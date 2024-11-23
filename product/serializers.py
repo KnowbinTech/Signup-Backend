@@ -286,7 +286,7 @@ class CollectionModelSerializerGET(serializers.ModelSerializer):
         return CollectionItemsModelSerializerGET(attrs.collection_items.all(), many=True).data
 
     def get_feature_image(self, attrs):
-        return attrs.feature_image.url
+        return attrs.feature_image.url if attrs.feature_image else ''
 
     class Meta:
         model = Collection
@@ -294,7 +294,7 @@ class CollectionModelSerializerGET(serializers.ModelSerializer):
 
 
 class LookBookModelSerializer(serializers.ModelSerializer):
-    feature_image = serializers.CharField(required=False)
+    feature_image = serializers.FileField(required=False)
 
     def validate(self, attrs):
         name = attrs.get('name')
@@ -338,10 +338,7 @@ class LookBookModelSerializerGET(serializers.ModelSerializer):
         return str(attrs.updated_by if attrs.updated_by else '')
 
     def get_feature_image(self, attrs):
-        key = attrs.feature_image if attrs.feature_image else ''
-        result = generate_presigned_url(key)
-        url = result["url"]
-        return url
+        return attrs.feature_image.url if attrs.feature_image else ''
 
     def get_look_book_items(self, attrs):
         return LookBookItemsModelSerializerGET(attrs.look_book_items.all(), many=True).data
