@@ -40,6 +40,8 @@ from product.filters import LookBookFilter
 from product.filters import CollectionItemsFilter
 from product.filters import LookBookItemsFilter
 
+from setup.utils import upload_image_to_wasabi
+
 
 class ProductsModelViewSet(BaseModelViewSet, ExportData):
     queryset = Products.objects.all()
@@ -271,6 +273,32 @@ class CollectionModelViewSet(BaseModelViewSet, ExportData):
     ]
     filterset_class = CollectionFilter
 
+    @action(detail=False, methods=['post'], url_path='create_record')
+    def create_record(self, request, *args, **kwargs):
+        """
+        Handles the creation of a new record, including logo upload.
+        Parameters:
+            request (HttpRequest): The HTTP request object containing model data.
+        Returns:
+            Response: A DRF Response object with the creation status.
+        """
+        serializer = self.get_serializer(data=request.data)
+        feature_image = request.data.get('feature_image')
+
+        if feature_image:
+            # Upload the logo to Wasabi
+            feature_image_url = upload_image_to_wasabi(feature_image)  # Call the global function
+            if feature_image_url:
+                # Append the URL to the serializer data
+                key = feature_image_url['key']
+                serializer.initial_data['feature_image'] = key
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_db_action(serializer, 'create')
+
+        return Response(serializer.data, status=201)
+    
+
     @action(detail=True, methods=['POST'], url_path='add-product', serializer_class=AddProductCollectionSerializer)
     def add_product(self, request, *args, **kwargs):
         """
@@ -324,6 +352,31 @@ class LookBookModelViewSet(BaseModelViewSet, ExportData):
         'variants'
     ]
     filterset_class = LookBookFilter
+
+    @action(detail=False, methods=['post'], url_path='create_record')
+    def create_record(self, request, *args, **kwargs):
+        """
+        Handles the creation of a new record, including logo upload.
+        Parameters:
+            request (HttpRequest): The HTTP request object containing model data.
+        Returns:
+            Response: A DRF Response object with the creation status.
+        """
+        serializer = self.get_serializer(data=request.data)
+        feature_image = request.data.get('feature_image')
+
+        if feature_image:
+            # Upload the logo to Wasabi
+            feature_image_url = upload_image_to_wasabi(feature_image)  # Call the global function
+            if feature_image_url:
+                # Append the URL to the serializer data
+                key = feature_image_url['key']
+                serializer.initial_data['feature_image'] = key
+
+        serializer.is_valid(raise_exception=True)
+        self.perform_db_action(serializer, 'create')
+
+        return Response(serializer.data, status=201)
 
     @action(detail=True, methods=['POST'], url_path='add-product', serializer_class=AddProductCollectionSerializer)
     def add_product(self, request, *args, **kwargs):
