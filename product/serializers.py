@@ -153,13 +153,11 @@ class VariantModelSerializer(serializers.ModelSerializer):
                 })
 
         for file in attachment:
-            compressed_image = compress_image(file)
 
             img_obj = product.variant_images.create(**{
                 'image': file,
                 'name': file.name,
             })
-            img_obj.thumbnail.save(f"thumbnail_{file.name}", compressed_image)
             img_obj.save()
 
         return product
@@ -239,7 +237,7 @@ class ProductImageModelSerializer(serializers.ModelSerializer):
 
 class CollectionModelSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(child=serializers.CharField(), required=False, allow_null=True, allow_empty=True)
-    feature_image=serializers.CharField(required=False)
+    feature_image=serializers.FileField(required=False)
 
     def validate(self, attrs):
         name = attrs.get('name')
@@ -288,10 +286,7 @@ class CollectionModelSerializerGET(serializers.ModelSerializer):
         return CollectionItemsModelSerializerGET(attrs.collection_items.all(), many=True).data
 
     def get_feature_image(self, attrs):
-        key = attrs.feature_image if attrs.feature_image else ''
-        result = generate_presigned_url(key)
-        url = result["url"]
-        return url
+        return attrs.feature_image.url
 
     class Meta:
         model = Collection
