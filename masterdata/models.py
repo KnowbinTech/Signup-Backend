@@ -52,7 +52,7 @@ class Dimension(BaseModel):
 
 class Brand(BaseModel):
     name = models.CharField(max_length=75, blank=True, null=True, verbose_name='Name', db_index=True)
-    logo = models.FileField(upload_to='brand/logo', blank=True, null=True, verbose_name='Logo')
+    logo = models.FileField(upload_to='brand/', blank=True, null=True, verbose_name='Image')
     description = models.TextField(blank=True, null=True, verbose_name='Description')
     is_active = models.BooleanField(default=True, verbose_name='Active')
     tags = ArrayField(models.CharField(max_length=100, blank=True, null=True), blank=True, null=True, default=list, verbose_name='Tags')
@@ -93,7 +93,7 @@ class Category(BaseModel):
         on_delete=models.SET_NULL, blank=True, null=True
     )
 
-    image = models.FileField(upload_to='category/images', blank=True, null=True, verbose_name='Image')
+    image = models.FileField(upload_to='category/', blank=True, null=True, verbose_name='Image')
 
     is_main_menu = models.BooleanField(default=False, verbose_name='Main Menu')
     is_top_category = models.BooleanField(default=False, verbose_name='Top Category')

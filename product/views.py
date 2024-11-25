@@ -40,6 +40,8 @@ from product.filters import LookBookFilter
 from product.filters import CollectionItemsFilter
 from product.filters import LookBookItemsFilter
 
+from setup.utils import upload_image_to_wasabi
+
 
 class ProductsModelViewSet(BaseModelViewSet, ExportData):
     queryset = Products.objects.all()
@@ -270,7 +272,7 @@ class CollectionModelViewSet(BaseModelViewSet, ExportData):
         'collections'
     ]
     filterset_class = CollectionFilter
-
+    
     @action(detail=True, methods=['POST'], url_path='add-product', serializer_class=AddProductCollectionSerializer)
     def add_product(self, request, *args, **kwargs):
         """

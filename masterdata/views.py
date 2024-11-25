@@ -28,6 +28,8 @@ from .serializers import ReturnReasonModelSerializerGET
 from .filters import CategoryFilter
 from .filters import BrandFilter
 from .filters import AttributeGroupFilter
+from setup.utils import upload_image_to_wasabi
+
 
 
 class CategoryModelViewSet(BaseModelViewSet, ExportData):
@@ -40,6 +42,7 @@ class CategoryModelViewSet(BaseModelViewSet, ExportData):
         'second_parent_category', 'attribute_group'
     ]
     filterset_class = CategoryFilter
+
 
     @action(detail=True, methods=['POST'], url_path='deactivate')
     def deactivate(self, request, *args, **kwargs):

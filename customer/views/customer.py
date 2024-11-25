@@ -4,6 +4,8 @@ from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 
+from django.db.models import Count
+
 from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework import status
@@ -54,6 +56,12 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = CustomerProductFilter
     search_fields = ['name', 'brand__name']
+
+    def get_queryset(self):
+        """
+        Exclude products with no variants.
+        """
+        return Products.objects.annotate(variant_count=Count('product_variant')).filter(variant_count__gt=0)
 
     @action(detail=True, methods=['GET'], url_path='other-variants')
     def other_variants(self, request, *args, **kwargs):

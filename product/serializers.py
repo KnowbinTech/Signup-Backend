@@ -19,6 +19,8 @@ from masterdata.serializers import RetrieveDimensionModelSerializer
 from masterdata.serializers import RetrieveAttributeModelSerializer
 from inventory.serializers import TaxModelSerializerGET
 
+from setup.utils import generate_presigned_url
+
 
 class ProductsModelSerializer(serializers.ModelSerializer):
     short_description = serializers.CharField()
@@ -75,7 +77,7 @@ class ProductsModelSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        from setup.utils import compress_image
+        # from setup.utils import compress_image
         attachment = validated_data.pop('images', [])
 
         categories = validated_data.pop('categories', None)
@@ -86,13 +88,13 @@ class ProductsModelSerializer(serializers.ModelSerializer):
             product.categories.set(categories)
 
         for file in attachment:
-            compressed_image = compress_image(file)
+        #     compressed_image = compress_image(file)
 
             img_obj = product.product_images.create(**{
                 'image': file,
                 'name': file.name,
             })
-            img_obj.thumbnail.save(f"thumbnail_{file.name}", compressed_image)
+        #     img_obj.thumbnail.save(f"thumbnail_{file.name}", compressed_image)
             img_obj.save()
 
         return product
@@ -151,13 +153,11 @@ class VariantModelSerializer(serializers.ModelSerializer):
                 })
 
         for file in attachment:
-            compressed_image = compress_image(file)
 
             img_obj = product.variant_images.create(**{
                 'image': file,
                 'name': file.name,
             })
-            img_obj.thumbnail.save(f"thumbnail_{file.name}", compressed_image)
             img_obj.save()
 
         return product
@@ -237,6 +237,7 @@ class ProductImageModelSerializer(serializers.ModelSerializer):
 
 class CollectionModelSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(child=serializers.CharField(), required=False, allow_null=True, allow_empty=True)
+    feature_image=serializers.FileField(required=False)
 
     def validate(self, attrs):
         name = attrs.get('name')
@@ -293,6 +294,7 @@ class CollectionModelSerializerGET(serializers.ModelSerializer):
 
 
 class LookBookModelSerializer(serializers.ModelSerializer):
+    feature_image = serializers.FileField(required=False)
 
     def validate(self, attrs):
         name = attrs.get('name')

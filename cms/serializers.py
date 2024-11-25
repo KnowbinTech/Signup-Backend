@@ -2,9 +2,11 @@ from rest_framework import serializers
 
 from .models import HeroSection
 
+from setup.utils import generate_presigned_url
+
 
 class HeroSectionModelSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(required=False)
+    image = serializers.FileField(required=False)
 
     class Meta:
         model = HeroSection

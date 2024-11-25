@@ -7,6 +7,7 @@ from .models import Attribute
 from .models import AttributeGroup
 from .models import Dimension
 from .models import ReturnReason
+from setup.utils import generate_presigned_url
 
 
 class BrandModelSerializer(serializers.ModelSerializer):
@@ -204,6 +205,7 @@ class RetrieveDimensionModelSerializer(serializers.ModelSerializer):
 class CategoryModelSerializer(serializers.ModelSerializer):
     name = serializers.CharField()
     description = serializers.CharField()
+    image = serializers.FileField(required=False)
     handle = serializers.CharField()
     tags = serializers.ListField(child=serializers.CharField(), required=False, allow_null=True, allow_empty=True)
 
@@ -272,6 +274,7 @@ class CategoryModelSerializerGET(serializers.ModelSerializer):
 
     def get_image(self, attrs):
         return attrs.image.url if attrs.image else ''
+
 
     def get_sub_category(self, attrs):
         return CategoryModelSerializerGET(attrs.subcategory.all(), many=True).data
