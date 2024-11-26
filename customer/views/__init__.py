@@ -4,6 +4,7 @@ from .session_cart import SessionCartModelViewSet
 from .whishlist import WishListModelViewSet
 
 from .customer import CustomerProductViewSet
+from .customer import CustomerBrandViewSet
 from .customer import CustomerVariantViewSet
 from .customer import CustomerCategoryViewSet
 from .customer import CustomerCollectionViewSet

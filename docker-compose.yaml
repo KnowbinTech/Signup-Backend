@@ -24,7 +24,7 @@ services:
       # PHONE_PE_API_KEY=099eb0cd-02cf-4e2a-8aca-3e6c6aff0399
       - PHONE_PE_KEY_INDEX=1
       - PHONE_PAY_S2S_CALLBACK_URL=https://signupcasuals.com/api/transaction/payment/callback/
-      - PHONE_PAY_REDIRECT_URL=http://signupcasuals.com/api/transaction/payment/callback/
+      - PHONE_PAY_REDIRECT_URL=https://signupcasuals.com/api/transaction/payment/callback/
       - PORT=8001
 
     volumes:
