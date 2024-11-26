@@ -29,7 +29,9 @@ class LogtoJWTAuthentication(JWTAuthentication):
             )
             return payload
         except Exception as e:
+            print('-------------------------------')
             print('Exception : ', e)
+            print('-------------------------------')
             raise AuthenticationFailed('Invalid token')
 
     def authenticate(self, request):
