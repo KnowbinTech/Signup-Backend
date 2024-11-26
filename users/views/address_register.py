@@ -24,6 +24,9 @@ class AddressRegisterModelViewSet(BaseModelViewSet):
     ]
     filterset_class = AddressRegisterFilter
 
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
     @action(detail=True, methods=['POST'], url_path='make-default')
     def make_default(self, request, *args, **kwargs):
         """
