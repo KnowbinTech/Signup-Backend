@@ -17,10 +17,8 @@ class LogtoJWTAuthentication(JWTAuthentication):
         super().__init__()
 
     def decode_token(self, token):
-        alg = jwt.get_unverified_header(token).get('alg')
 
         try:
-
             payload = jwt.decode(
                 token,
                 self.jwks,
@@ -58,7 +56,6 @@ class LogtoJWTAuthentication(JWTAuthentication):
         user_id = validated_token.get(user_id_claim)
 
         try:
-            userobj = User.objects.all()
             user = User.objects.get(**{user_id_field: user_id})
             return user
         except User.DoesNotExist:
