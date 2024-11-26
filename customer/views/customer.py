@@ -14,7 +14,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 # from algoliasearch_django import raw_search
-
+from masterdata.models import Brand
 from product.models import Products
 from product.models import Variant
 from product.models import Collection
@@ -22,10 +22,12 @@ from product.models import LookBook
 from masterdata.models import Category
 from orders.models import Order
 
+
 from product.serializers import ProductsModelSerializerGET
 from product.serializers import VariantModelSerializerGET
 from product.serializers import CollectionModelSerializerGET
 from product.serializers import LookBookModelSerializerGET
+from product.serializers import BrandSerializerGET
 from orders.serializers import OrderItemsModelSerializerGET
 
 from masterdata.serializers import CategoryModelSerializerGET
@@ -187,3 +189,31 @@ class CustomerOrderViewSet(GenericViewSet, ListModelMixin):
     def get_queryset(self):
         user = self.request.user
         return Order.objects.filter(user=user.username)
+
+
+class CustomerBrandViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
+   """
+   Get the list of brands.
+    Parameters:
+       request (HttpRequest): The HTTP request object containing model data.
+    Returns:
+       Response: A DRF Response object with the brand data.
+   """
+   authentication_classes = [SessionAuthentication]
+   permission_classes = (AllowAny,)
+   queryset = Brand.objects.all()
+   serializer_class = BrandSerializerGET
+   filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+   search_fields = ['name', 'description']
+
+   @action(detail=True, methods=['GET'], url_path='products')
+   def brand_products(self, request, *args, **kwargs):
+       """
+       API to fetch all products for a specific brand
+       """
+       brand = self.get_object()
+       products = Products.objects.filter(brand=brand)
+       return Response(
+           ProductsModelSerializerGET(products, many=True).data,
+           status=status.HTTP_200_OK
+       )
