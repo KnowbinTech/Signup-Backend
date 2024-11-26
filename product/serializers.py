@@ -9,6 +9,7 @@ from product.models import Collection
 from product.models import CollectionItems
 from product.models import LookBook
 from product.models import LookBookItems
+from masterdata.models import Brand
 
 from customer.models import WishList
 
@@ -128,6 +129,11 @@ class ProductsModelSerializerGET(serializers.ModelSerializer):
         model = Products
         fields = '__all__'
 
+
+class BrandSerializerGET(serializers.ModelSerializer):
+   class Meta:
+       model = Brand
+       fields = ['id', 'name', 'logo']
 
 class VariantModelSerializer(serializers.ModelSerializer):
     stock = serializers.IntegerField(min_value=1)
