@@ -86,9 +86,3 @@ class User(AbstractUser):
             self.customer_id = generate_customer_id()
         super().save(*args, **kwargs)
 
-    def tokens(self):
-        refresh = RefreshToken.for_user(self)
-        return {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token)
-        }

@@ -190,8 +190,11 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
 }
 
-LOGTO_CLIENT_ID = os.environ.get('LOGTO_CLIENT_ID')
-LOGTO_CLIENT_SECRET = os.environ.get('LOGTO_CLIENT_SECRET')
+LOGTO_APP_ID = os.environ.get('LOGTO_APP_ID')
+LOGTO_APP_SECRET = os.environ.get('LOGTO_APP_SECRET')
+LOGTO_MANAGEMENT_ENDPOINT = os.environ.get('LOGTO_MANAGEMENT_ENDPOINT')
+LOGTO_M2M_RESOURCE = os.environ.get('LOGTO_M2M_RESOURCE')
+LOGTO_TOKEN_URL = os.environ.get('LOGTO_M2M_RESOURCE')
 LOGTO_ISSUER = os.environ.get('LOGTO_ISSUER')
 LOGTO_AUDIENCE = os.environ.get('LOGTO_AUDIENCE')
 LOGTO_CERTS_URL = os.environ.get('LOGTO_CERTS_URL')

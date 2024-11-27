@@ -112,7 +112,6 @@ class ChangePassword(APIView):
         if serializer.is_valid(raise_exception=True):
             password = serializer.validated_data['confirm_password']
             serializer.save(password=password)
-            logout(request)
             return Response({
                 'success': True,
                 'message': 'Successfully Password Updated'

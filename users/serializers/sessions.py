@@ -2,6 +2,7 @@ import requests
 from django.contrib.auth import authenticate, login
 from rest_framework import serializers
 from users.models.other import AddressRegister
+from setup.logto import LOGTOManagementAPI
 
 
 class LoginSerializer(serializers.Serializer):
@@ -35,19 +36,10 @@ class ResetPassword(serializers.Serializer):
 
     def validate(self, attrs):
         from setup.middleware.request import CurrentRequestMiddleware
-        username = CurrentRequestMiddleware.get_request().user.username
+        request_user = CurrentRequestMiddleware.get_request().user
         old_password = attrs.get('old_password')
         new_password = attrs.get('new_password')
         confirm_password = attrs.get('confirm_password')
-
-        user = authenticate(requests, username=username, password=old_password)
-
-        if not user:
-            raise serializers.ValidationError(
-                {
-                    'old_password': 'Invalid password'
-                }
-            )
 
         if new_password != confirm_password:
             raise serializers.ValidationError(
@@ -56,13 +48,29 @@ class ResetPassword(serializers.Serializer):
                 }
             )
 
-        self.user = user # noqa
+        self.logto = LOGTOManagementAPI() # noqa
+
+        try:
+            self.logto.user_has_password(request_user.sub)
+        except Exception as e:
+            print('Exception : ', e)
+            raise serializers.ValidationError('Invalid password.')
+
+        try:
+            self.logto.check_password(request_user.sub, old_password)
+        except Exception as e:
+            print('Exception : ', e)
+            raise serializers.ValidationError('Invalid password.')
+
+        self.user = request_user # noqa
 
         return attrs
 
     def save(self, password):
-        self.user.set_password(password)
-        self.user.save()
+        try:
+            self.logto.change_password(self.user.sub, password)
+        except Exception as e:
+            raise serializers.ValidationError("Something went wrong, Please try again later.!")
 
 
 class AddressRegisterModelSerializer(serializers.ModelSerializer):
