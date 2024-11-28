@@ -2,6 +2,7 @@
 
 def get_userdata(user):
     return {
+        'id': user.id,
         'username': user.username,
         'name': user.name,
         'email': user.email,
