@@ -15,6 +15,8 @@ from orders.models import Order
 
 class CustomerProductFilter(filters.FilterSet):
     categories = filters.CharFilter(method='generate_categories_view')
+    brand = filters.NumberFilter(field_name='brand__id')
+    preferred_gender = filters.CharFilter(field_name='preferred_gender')
 
     def generate_categories_view(self, queryset, value, *args, **kwargs):
         try:
@@ -31,7 +33,7 @@ class CustomerProductFilter(filters.FilterSet):
 
     class Meta:
         model = Products
-        fields = ['categories']
+        fields = ['categories', 'brand', 'preferred_gender']
 
 
 class CustomerVariantFilter(filters.FilterSet):
