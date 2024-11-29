@@ -16,6 +16,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://backend.signupcasuals.com",
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
+    'www.signupcasuals.com',
     'https://signupbackend.knowbin.tech',
     'https://rahuldev.signupcasuals.com',
 ]
@@ -24,6 +25,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://backend.signupcasuals.com",
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
+    'www.signupcasuals.com',
     'https://signupbackend.knowbin.tech',
     'https://rahuldev.signupcasuals.com',
 ]
@@ -32,6 +34,7 @@ CORS_ORIGIN_WHITELIST = [
     "https://backend.signupcasuals.com",
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
+    'www.signupcasuals.com',
     'https://signupbackend.knowbin.tech:8001',
     'https://signupbackend.knowbin.tech',
     'https://rahuldev.signupcasuals.com',
