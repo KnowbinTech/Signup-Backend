@@ -383,18 +383,17 @@ class CollectionItemsModelSerializer(serializers.ModelSerializer):
 
 class CollectionItemsModelSerializerGET(serializers.ModelSerializer):
     product = ProductsModelSerializerGET(read_only=True)
-    created_by = serializers.SerializerMethodField()
-    updated_by = serializers.SerializerMethodField()
-
-    def get_created_by(self, attrs):
-        return str(attrs.created_by if attrs.created_by else '')
-
-    def get_updated_by(self, attrs):
-        return str(attrs.updated_by if attrs.updated_by else '')
 
     class Meta:
         model = CollectionItems
-        fields = '__all__'
+        fields = ['product']
+
+    def to_representation(self, instance):
+        """
+        Customize the output to only include the product details.
+        """
+        product_representation = super().to_representation(instance)['product']
+        return product_representation
 
 
 class LookBookItemsModelSerializer(serializers.ModelSerializer):
