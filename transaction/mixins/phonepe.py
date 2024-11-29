@@ -38,6 +38,8 @@ class PhonePe:
 
     def make_request(self, transaction):
         amount = int(transaction.amount * 100)
+
+        print('amount : ', amount)
         payload = {
             "merchantId": self.MERCHANT_KEY,
             "merchantTransactionId": transaction.transaction_id,
