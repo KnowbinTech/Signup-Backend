@@ -73,7 +73,7 @@ class TransactionAPIView(APIView):
                 # Redirect the user to the PhonePe payment page
                 return HttpResponseRedirect(response_data["data"]["instrumentResponse"]["redirectInfo"]["url"])
             else:
-                return Response({"error": response_data.get("message")}, status=400)
+                return Response({"error": response_data.get("message"), 'error_info': response_data}, status=400)
         else:
             return Response({"error": "Failed to initiate payment"}, status=response.status_code)
 
