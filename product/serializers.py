@@ -110,7 +110,7 @@ class ProductsModelSerializerGET(serializers.ModelSerializer):
     created_by = serializers.SerializerMethodField()
     updated_by = serializers.SerializerMethodField()
     stock = serializers.SerializerMethodField()
-    gst=TaxModelSerializerGET()
+    gst = TaxModelSerializerGET()
 
     def get_stock(self, attrs):
         total_stock = attrs.product_variant.aggregate(total=Sum('stock'))['total']
@@ -134,6 +134,7 @@ class BrandSerializerGET(serializers.ModelSerializer):
    class Meta:
        model = Brand
        fields = ['id', 'name', 'logo']
+
 
 class VariantModelSerializer(serializers.ModelSerializer):
     stock = serializers.IntegerField(min_value=1)

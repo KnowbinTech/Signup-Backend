@@ -1,11 +1,12 @@
 import datetime
+import requests
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
-
+from django.http import HttpResponseRedirect
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin
 
@@ -52,10 +53,30 @@ class TransactionAPIView(APIView):
 
         payment_payload = PhonePe().payment(order)
 
-        return Response({
-            'payload': payment_payload,
-            'message': 'successfully initiated payment.'
-        }, status=status.HTTP_200_OK)
+        response = requests.post(
+            payment_payload['action'],
+            headers=payment_payload['headers'],
+            data=payment_payload['post_data']
+        )
+
+        if response.status_code == 200:
+            response_data = response.json()
+            if response_data.get("success"):
+                # Redirect the user to the PhonePe payment page
+                return HttpResponseRedirect(response_data["data"]["instrumentResponse"]["redirectUrl"])
+            else:
+                return Response({"error": response_data.get("message")}, status=400)
+        else:
+            return Response({"error": "Failed to initiate payment"}, status=response.status_code)
+
+        # return render(request, "redirect_to_pg.html", {
+        #     "payment_payload": payment_payload,
+        # })
+        #
+        # return Response({
+        #     'payload': payment_payload,
+        #     'message': 'successfully initiated payment.'
+        # }, status=status.HTTP_200_OK)
 
 
 class TransactionCallBackAPIView(APIView):
