@@ -71,7 +71,12 @@ class TransactionAPIView(APIView):
             response_data = response.json()
             if response_data.get("success"):
                 # Redirect the user to the PhonePe payment page
-                return HttpResponseRedirect(response_data["data"]["instrumentResponse"]["redirectInfo"]["url"])
+                # return HttpResponseRedirect(response_data["data"]["instrumentResponse"]["redirectInfo"]["url"])
+                return Response({
+                    # 'transaction_id': response_data['data']['orderDetails']['id'],
+                    'payment_url': response_data['data']['instrumentResponse']['redirectInfo']['url'],
+                    # 'payment_data': response_data['data']['instrumentResponse']['paymentData']
+                }, status=status.HTTP_200_OK)
             else:
                 return Response({"error": response_data.get("message"), 'error_info': response_data}, status=400)
         else:
