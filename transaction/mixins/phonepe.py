@@ -72,7 +72,7 @@ class PhonePe:
         return self.make_request(transaction)
 
     def check_payment_status(self, transaction_id):
-        request_url = self.PROD_GET_ACTION_URL.format(transaction_id)
+        request_url = self.PROD_GET_ACTION_URL.format(self.MERCHANT_KEY, transaction_id)
 
         print('request_url : ', request_url)
 
