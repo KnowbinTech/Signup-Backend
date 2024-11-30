@@ -112,6 +112,10 @@ class ShipRocketUtility:
 
         ship_rocket = ShipRocket()
 
+        print('------------------------------------------')
+        print('payload : ', payload)
+        print('------------------------------------------')
+
         data = ship_rocket.create_order(payload)
         shipment_id = data.get('shipment_id')
         obj.shipping_id = shipment_id
