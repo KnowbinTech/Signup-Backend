@@ -22,6 +22,7 @@ class PhonePe:
     PROD_POST_ACTION_URL = 'https://api.phonepe.com/apis/hermes'
     POST_ACTION_URL = 'https://api-preprod.phonepe.com/apis/pg-sandbox'
     GET_ACTION_URL = 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/PGTESTPAYUAT/{}'
+    PROD_GET_ACTION_URL = 'https://api.phonepe.com/apis/hermes/pg/v1/status/{}/{}'
     END_POINT = '/pg/v1/pay'
 
     def generate_headers(self, input_string):
@@ -71,7 +72,7 @@ class PhonePe:
         return self.make_request(transaction)
 
     def check_payment_status(self, transaction_id):
-        request_url = self.GET_ACTION_URL.format(transaction_id)
+        request_url = self.PROD_GET_ACTION_URL.format(transaction_id)
 
         print('request_url : ', request_url)
 
