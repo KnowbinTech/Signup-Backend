@@ -111,9 +111,10 @@ class ShipRocketUtility:
         logger.error(f"shipment_id. :  {data}", )
         shipment_id = data.get('shipment_id')
         obj.shipping_id = shipment_id
-        logger.error(f"shipment_id. :  {shipment_id}", )
-        ship_rocket.request_for_shipment(shipment_id)
         return data
+        # logger.error(f"shipment_id. :  {shipment_id}", )
+        # ship_rocket.request_for_shipment(shipment_id)
+        # return data
 
 
 
