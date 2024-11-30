@@ -160,8 +160,13 @@ class ShipRocket:
         response = requests.post(
             self.CREATE_ORDER,
             json=json.dumps(payload),
+            data=json.dumps(payload),
             headers=self.headers
         )
+        import logging
+
+        logger = logging.getLogger('django')
+        logger.error(f"response. :  {response}", )
         print('----------------')
         print('response : ', response.json())
         print('----------------')
