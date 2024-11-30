@@ -111,6 +111,10 @@ class ShipRocketUtility:
         }
 
         ship_rocket = ShipRocket()
+        import logging
+
+        logger = logging.getLogger('django')
+        logger.error(f"This is a test error message. :  {payload}", )
 
         print('------------------------------------------')
         print('payload : ', payload)
