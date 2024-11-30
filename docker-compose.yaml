@@ -5,6 +5,8 @@ services:
     container_name: signupbackendcont
     build: .
     restart: unless-stopped
+    networks:
+      - signupnetwork
     ports:
       - "8001"
     environment:
