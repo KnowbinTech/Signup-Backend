@@ -286,3 +286,6 @@ DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # AWS_LOCATION = 'media'  # E.g., "media" or "static"
 AWS_S3_FILE_OVERWRITE = False  # To prevent overwriting files with the same name
+
+SHIP_ROCKET_EMAIL = os.getenv('SHIP_ROCKET_EMAIL')
+SHIP_ROCKET_PASSWORD = os.getenv('SHIP_ROCKET_PASSWORD')
