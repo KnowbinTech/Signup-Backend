@@ -214,6 +214,8 @@ class NewUserSerializer(serializers.ModelSerializer):
         primary_phone = data.get('primaryPhone')
         application_id = data.get('applicationId')
 
+        username = username if username else primary_email
+
         created_at = convert_timestamp_to_date_time(data.get('createdAt'))
         last_sign_in_at = convert_timestamp_to_date_time(data.get('lastSignInAt'))
 
