@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = True
+DEBUG = False
 
 INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
 
@@ -107,7 +107,7 @@ KEY_INDEX = os.environ.get('PHONE_PE_KEY_INDEX')
 
 PHONE_PAY_S2S_CALLBACK_URL = os.environ.get('PHONE_PAY_S2S_CALLBACK_URL')
 PHONE_PAY_REDIRECT_URL = os.environ.get('PHONE_PAY_REDIRECT_URL')
-
+"""
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -141,4 +141,4 @@ LOGGING = {
         },
     },
 }
-
+"""
