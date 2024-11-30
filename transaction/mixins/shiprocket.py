@@ -159,7 +159,7 @@ class ShipRocket:
 
         response = requests.post(
             self.CREATE_ORDER,
-            data=json.dumps(payload),
+            json=json.dumps(payload),
             headers=self.headers
         )
         response.raise_for_status()
@@ -172,7 +172,7 @@ class ShipRocket:
 
         response = requests.post(
             self.CREATE_ORDER,
-            data=json.dumps(payload),
+            json=json.dumps(payload),
             headers=self.headers
         )
         response.raise_for_status()
@@ -185,7 +185,7 @@ class ShipRocket:
 
         response = requests.post(
             self.CREATE_ORDER,
-            data=json.dumps(payload),
+            json=json.dumps(payload),
             headers=self.headers
         )
         response.raise_for_status()
@@ -199,7 +199,7 @@ class ShipRocket:
         response = requests.post(
             self.GENERATE_AWB_FOR_SHIPMENT,
             headers=self.headers,
-            data=json.dumps(data)
+            json=json.dumps(data)
         )
         response.raise_for_status()
         return response.json()
@@ -215,7 +215,7 @@ class ShipRocket:
             response = requests.post(
                 self.REQUEST_FOR_SHIPMENT,
                 headers=self.headers,
-                data=json.dumps({'shipment_id': [shipment_id]})
+                json=json.dumps({'shipment_id': [shipment_id]})
             )
             response.raise_for_status()
             return response.json()
