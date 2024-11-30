@@ -67,13 +67,12 @@ class ShipRocketUtility:
                 'selling_price': str(i.price),
                 'sku': i.product_variant.product.sku,
                 'units': i.quantity,
-                'price': str(i.price),
             })
 
         payload = {
             'order_id': obj.order_id,
             'order_date': obj.created_at.strftime("%Y-%m-%d %H:%M"),
-            'pickup_location': 'Primary',
+            'pickup_location': 'Signup',
             'channel_id': '',
             'comment': '',
             'billing_customer_name': obj.address.full_name,
@@ -83,9 +82,9 @@ class ShipRocketUtility:
             'billing_city': obj.address.district,
             'billing_pincode': obj.address.pin_code,
             'billing_state': obj.address.state,
-            'billing_country': obj.address.country,
+            'billing_country': obj.address.country if obj.address.country else 'India',
             'billing_email': obj.address.user.email,
-            'billing_phone': obj.address.contact_number,
+            'billing_phone': '7994977797',
             'shipping_is_billing': True,
             'shipping_customer_name': "",
             'shipping_last_name': "",
@@ -104,10 +103,10 @@ class ShipRocketUtility:
             'transaction_charges': 0,
             'total_discount': 0,
             'sub_total': str(obj.total_amount),
-            'length': str(length),
-            'breadth': str(breadth),
-            'height': str(height),
-            'weight': str(weight)
+            'length': str(float(10)),
+            'breadth': str(float(10)),
+            'height': str(float(10)),
+            'weight': str(float(10))
         }
 
         ship_rocket = ShipRocket()
