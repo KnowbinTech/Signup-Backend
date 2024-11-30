@@ -121,6 +121,9 @@ class TransactionCallBackAPIView(APIView):
                 try:
                     obj.response = response.json()
                 except Exception as e:
+                    print('------------------------------------')
+                    print('Exception : ', e)
+                    print('------------------------------------')
                     obj.response = response.text
                 obj.response_received_date = datetime.datetime.now()
                 obj.save()
@@ -134,6 +137,9 @@ class TransactionCallBackAPIView(APIView):
                 try:
                     obj.response = response.json()
                 except Exception as e:
+                    print('------------------------------------')
+                    print('Exception : ', e)
+                    print('------------------------------------')
                     obj.response = response.text
                 obj.response_received_date = datetime.datetime.now()
                 obj.order.order_pending()
@@ -141,7 +147,7 @@ class TransactionCallBackAPIView(APIView):
                 obj.save()
                 return render(request, 'payment_failed.html', context={'output': response.text, 'main_request': form_data})
 
-        return render(request, 'payment_failed.html', context={'output': 'response.text', 'main_request': form_data})
+        return render(request, 'payment_failed.html', context={'output': 'No Transaction ID', 'main_request': form_data})
 
 
 class TransactionModelViewSet(GenericViewSet, ListModelMixin, ExportData):
