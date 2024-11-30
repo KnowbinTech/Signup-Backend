@@ -162,6 +162,9 @@ class ShipRocket:
             json=json.dumps(payload),
             headers=self.headers
         )
+        print('----------------')
+        print('response : ', response.json())
+        print('----------------')
         response.raise_for_status()
         return response.json()
 
