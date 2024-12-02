@@ -131,7 +131,7 @@ class WishListModelSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = validated_data.pop('user')
-        obj = WishList.objects.create(user=user, **validated_data)
+        obj, created = WishList.objects.get_or_create(user=user, **validated_data)
         return obj
 
 
