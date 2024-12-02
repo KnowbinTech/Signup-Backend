@@ -1,5 +1,6 @@
 import json
 import requests
+from django.conf import settings
 from dynamic_preferences.registries import global_preferences_registry
 
 global_preferences = global_preferences_registry.manager()
@@ -7,30 +8,32 @@ global_preferences = global_preferences_registry.manager()
 
 class ShipRocket:
 
-    GENERATE_TOKEN = 'https://apiv2.shiprocket.in/v1/external/auth/login/'
+    GENERATE_TOKEN = 'https://apiv2.shiprocket.in/v1/external/auth/login'
 
-    CREATE_ORDER = 'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc/'
-    UPDATE_CUSTOMER_DELIVERY_ADDRESS = 'https://apiv2.shiprocket.in/v1/external/orders/address/update/'
-    UPDATE_ORDER = 'https://apiv2.shiprocket.in/v1/external/orders/update/adhoc/'
-    CANCEL_ORDER = 'https://apiv2.shiprocket.in/v1/external/orders/cancel/'
+    CREATE_ORDER = 'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc'
+    UPDATE_CUSTOMER_DELIVERY_ADDRESS = 'https://apiv2.shiprocket.in/v1/external/orders/address/update'
+    UPDATE_ORDER = 'https://apiv2.shiprocket.in/v1/external/orders/update/adhoc'
+    CANCEL_ORDER = 'https://apiv2.shiprocket.in/v1/external/orders/cancel'
 
-    GENERATE_AWB_FOR_SHIPMENT = 'https://apiv2.shiprocket.in/v1/external/courier/assign/awb/'
-    REQUEST_FOR_SHIPMENT = 'https://apiv2.shiprocket.in/v1/external/courier/generate/pickup/'
+    GENERATE_AWB_FOR_SHIPMENT = 'https://apiv2.shiprocket.in/v1/external/courier/assign/awb'
+    REQUEST_FOR_SHIPMENT = 'https://apiv2.shiprocket.in/v1/external/courier/generate/pickup'
 
-    COURIER_LIST = 'https://apiv2.shiprocket.in/v1/external/courier/serviceability/'
+    COURIER_LIST = 'https://apiv2.shiprocket.in/v1/external/courier/serviceability'
 
-    ALL_ORDER = 'https://apiv2.shiprocket.in/v1/external/orders/'
-    ORDER_DETAILS = 'https://apiv2.shiprocket.in/v1/external/orders/show/{}/'
+    ALL_ORDER = 'https://apiv2.shiprocket.in/v1/external/orders'
+    ORDER_DETAILS = 'https://apiv2.shiprocket.in/v1/external/orders/show/{}'
 
-    ALL_SHIPMENT = 'https://apiv2.shiprocket.in/v1/external/shipments/'
-    SHIPMENT_DETAILS = 'https://apiv2.shiprocket.in/v1/external/shipments/{}/'
-    CANCEL_SHIPMENT = 'https://apiv2.shiprocket.in/v1/external/orders/cancel/shipment/awbs/'
+    ALL_SHIPMENT = 'https://apiv2.shiprocket.in/v1/external/shipments'
+    SHIPMENT_DETAILS = 'https://apiv2.shiprocket.in/v1/external/shipments/{}'
+    CANCEL_SHIPMENT = 'https://apiv2.shiprocket.in/v1/external/orders/cancel/shipment/awbs'
 
-    EXPORT_ORDERS = 'https://apiv2.shiprocket.in/v1/external/orders/export/'
+    EXPORT_ORDERS = 'https://apiv2.shiprocket.in/v1/external/orders/export'
 
     def __init__(self):
-        self.email = global_preferences['integrations__SHIP_ROCKET_EMAIL']
-        self.password = global_preferences['integrations__SHIP_ROCKET_PASSWORD']
+        # self.email = global_preferences['integrations__SHIP_ROCKET_EMAIL']
+        # self.password = global_preferences['integrations__SHIP_ROCKET_PASSWORD']
+        self.email = settings.SHIP_ROCKET_EMAIL
+        self.password = settings.SHIP_ROCKET_PASSWORD
         self.headers = {"Content-Type": 'application/json'}
 
         self.authorize()
@@ -159,6 +162,13 @@ class ShipRocket:
             data=json.dumps(payload),
             headers=self.headers
         )
+        import logging
+
+        logger = logging.getLogger('django')
+        logger.error(f"response. :  {response}", )
+        print('----------------')
+        print('response : ', response.json())
+        print('----------------')
         response.raise_for_status()
         return response.json()
 

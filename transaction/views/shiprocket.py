@@ -67,15 +67,12 @@ class ShipRocketUtility:
                 'selling_price': str(i.price),
                 'sku': i.product_variant.product.sku,
                 'units': i.quantity,
-                'price': str(i.price),
             })
 
         payload = {
             'order_id': obj.order_id,
             'order_date': obj.created_at.strftime("%Y-%m-%d %H:%M"),
-            'pickup_location': 'Primary',
-            'channel_id': '',
-            'comment': '',
+            'pickup_location': 'Signup',
             'billing_customer_name': obj.address.full_name,
             'billing_last_name': '',
             'billing_address': "{},{}".format(obj.address.address_line_1, obj.address.address_line_1),
@@ -83,20 +80,10 @@ class ShipRocketUtility:
             'billing_city': obj.address.district,
             'billing_pincode': obj.address.pin_code,
             'billing_state': obj.address.state,
-            'billing_country': obj.address.country,
+            'billing_country': obj.address.country if obj.address.country else 'INDIA',
             'billing_email': obj.address.user.email,
-            'billing_phone': obj.address.contact_number,
+            'billing_phone': '7994977797',
             'shipping_is_billing': True,
-            'shipping_customer_name': "",
-            'shipping_last_name': "",
-            'shipping_address': "",
-            'shipping_address_2': "",
-            'shipping_city': "",
-            'shipping_pincode': "",
-            'shipping_country': "",
-            'shipping_state': "",
-            'shipping_email': "",
-            'shipping_phone': "",
             'order_items': post_order_items,
             'payment_method': "Prepaid",
             'shipping_charges': 0,
@@ -104,19 +91,30 @@ class ShipRocketUtility:
             'transaction_charges': 0,
             'total_discount': 0,
             'sub_total': str(obj.total_amount),
-            'length': str(length),
-            'breadth': str(breadth),
-            'height': str(height),
-            'weight': str(weight)
+            'length': '20',
+            'breadth': '20',
+            'height': '10',
+            'weight': '2.5'
         }
 
         ship_rocket = ShipRocket()
+        import logging
+
+        logger = logging.getLogger('django')
+        logger.error(f"This is a test error message. :  {payload}", )
+
+        print('------------------------------------------')
+        print('payload : ', payload)
+        print('------------------------------------------')
 
         data = ship_rocket.create_order(payload)
+        logger.error(f"shipment_id. :  {data}", )
         shipment_id = data.get('shipment_id')
         obj.shipping_id = shipment_id
-        ship_rocket.request_for_shipment(shipment_id)
         return data
+        # logger.error(f"shipment_id. :  {shipment_id}", )
+        # ship_rocket.request_for_shipment(shipment_id)
+        # return data
 
 
 

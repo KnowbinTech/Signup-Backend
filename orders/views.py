@@ -141,7 +141,7 @@ class OrderModelViewSet(GenericViewSet, ListModelMixin, ExportData):
     """
 
     permission_classes = (IsAuthenticated, IsSuperUser,)
-    queryset = Order.objects.filter(status=Order.ORDER_PLACED)
+    queryset = Order.objects.all()
     serializer_class = OrderRetrieveSerializer
     default_fields = [
         'order_id', 'total_amount', 'user', 'address',
