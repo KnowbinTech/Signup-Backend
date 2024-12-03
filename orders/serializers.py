@@ -5,6 +5,7 @@ from orders.models import OrderItem
 from users.models import AddressRegister
 from product.serializers import VariantModelSerializerGET
 from customer.serializers import CartModelSerializer
+from users.serializers import AddressRegisterModelSerializer
 
 
 class OrderModelSerializer(serializers.ModelSerializer):
@@ -75,6 +76,7 @@ class OrderRetrieveSerializer(serializers.ModelSerializer):
 
 class OrderItemsModelSerializerGET(serializers.ModelSerializer):
     cart=CartModelSerializer()
+    address=AddressRegisterModelSerializer()
     created_by = serializers.SerializerMethodField()
     updated_by = serializers.SerializerMethodField()
 
