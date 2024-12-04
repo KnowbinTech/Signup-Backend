@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.mixins import ListModelMixin
 from rest_framework.mixins import RetrieveModelMixin
 from django_filters.rest_framework import DjangoFilterBackend
-
+from drf_spectacular.utils import extend_schema
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
@@ -30,9 +30,10 @@ from .serializers import OrderRetrieveSerializer
 from .filters import OrderFiler
 
 
+@extend_schema(tags=["Orders"])
 class PlaceOrder(GenericViewSet, RetrieveModelMixin):
     permission_classes = (IsAuthenticated, IsCustomer,)
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().order_by('-id')
     serializer_class = OrderRetrieveSerializer
 
     def get_object(self):
@@ -135,13 +136,14 @@ class PlaceOrder(GenericViewSet, RetrieveModelMixin):
         }, status=status.HTTP_200_OK)
 
 
+@extend_schema(tags=["Orders"])
 class OrderModelViewSet(GenericViewSet, ListModelMixin, ExportData):
     """
         API for Order details for Admin user
     """
 
     permission_classes = (IsAuthenticated, IsSuperUser,)
-    queryset = Order.objects.all()
+    queryset = Order.objects.all().order_by('-id')
     serializer_class = OrderRetrieveSerializer
     default_fields = [
         'order_id', 'total_amount', 'user', 'address',

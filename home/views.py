@@ -7,6 +7,7 @@ from django.db.models import Sum
 from django.db.models import Count
 from django.utils import timezone
 from django.db.models.functions import TruncMonth
+from drf_spectacular.utils import extend_schema
 
 from .serializers import DashboardSerializer
 
@@ -17,6 +18,7 @@ from .utils import order_processing_time
 from .utils import order_return_rate
 
 
+@extend_schema(tags=["Home"])
 class DashboardAPIView(APIView):
     permission_classes = (IsAuthenticated, IsSuperUser,)
 
@@ -151,6 +153,7 @@ class DashboardAPIView(APIView):
         }, status=status.HTTP_200_OK)
 
 
+@extend_schema(tags=["Home"])
 class CustomerGrowthAPIView(APIView):
     permission_classes = (IsAuthenticated, IsSuperUser,)
 
@@ -188,6 +191,7 @@ class CustomerGrowthAPIView(APIView):
         }, status=status.HTTP_200_OK)
 
 
+@extend_schema(tags=["Home"])
 class CustomerOrderAnalysisAPIView(APIView):
     def get(self, request):
         # Get current month's start date and last month's start date
@@ -216,6 +220,7 @@ class CustomerOrderAnalysisAPIView(APIView):
         return Response(data)
 
 
+@extend_schema(tags=["Home"])
 class CustomerRetentionAPIView(APIView):
     def get(self, request):
         # Get current month's start date and last month's start date
@@ -256,6 +261,7 @@ class CustomerRetentionAPIView(APIView):
         return Response(data)
 
 
+@extend_schema(tags=["Home"])
 class MonthlyCustomerCountAPIView(APIView):
     def get(self, request):
         # Get current year

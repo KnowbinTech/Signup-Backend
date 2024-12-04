@@ -1,9 +1,11 @@
+from drf_spectacular.utils import extend_schema
 from setup.views import BaseModelViewSet
 from users.models import User
 from users.serializers import StoreManagerModelSerializer
 from users.serializers import UserModelSerializerGET
 
 
+@extend_schema(tags=["Account"])
 class ManagerViewSet(BaseModelViewSet):
     queryset = User.objects.filter(deleted=False)
     serializer_class = StoreManagerModelSerializer

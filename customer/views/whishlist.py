@@ -1,6 +1,6 @@
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin
-
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -18,9 +18,10 @@ from customer.serializers.serializers import WishListGETSerializer
 from customer.filters import wishListFilter
 
 
+@extend_schema(tags=["Customer"])
 class WishListModelViewSet(GenericViewSet, ListModelMixin):
     permission_classes = (IsAuthenticated, IsCustomer,)
-    queryset = WishList.objects.all()
+    queryset = WishList.objects.all().order_by('-id')
     serializer_class = WishListGETSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = wishListFilter

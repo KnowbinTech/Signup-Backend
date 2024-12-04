@@ -1,4 +1,5 @@
 from setup.views import BaseModelViewSet
+from drf_spectacular.utils import extend_schema
 
 from .models import Inventory
 from .models import Batch
@@ -12,8 +13,9 @@ from .serializers import TaxModelSerializerGET
 from .serializers import WarehouseModelSerializer
 
 
+@extend_schema(tags=["Inventory"])
 class TaxModelViewSet(BaseModelViewSet):
-    queryset = Tax.objects.all()
+    queryset = Tax.objects.all().order_by('-id')
     serializer_class = TaxModelSerializer
     retrieve_serializer_class = TaxModelSerializerGET
     search_fields = ['name']
@@ -23,15 +25,17 @@ class TaxModelViewSet(BaseModelViewSet):
     ]
 
 
+@extend_schema(tags=["Inventory"])
 class WarehouseModelViewSet(BaseModelViewSet):
-    queryset = Warehouse.objects.all()
+    queryset = Warehouse.objects.all().order_by('-id')
     serializer_class = WarehouseModelSerializer
     search_fields = ['name']
     default_fields = ['name']
 
 
+@extend_schema(tags=["Inventory"])
 class BatchModelViewSet(BaseModelViewSet):
-    queryset = Batch.objects.all()
+    queryset = Batch.objects.all().order_by('-id')
     serializer_class = BatchModelSerializer
     search_fields = ['batch_number', 'rack', 'row']
     default_fields = [
@@ -53,8 +57,9 @@ class BatchModelViewSet(BaseModelViewSet):
     ]
 
 
+@extend_schema(tags=["Inventory"])
 class InventoryModelViewSet(BaseModelViewSet):
-    queryset = Inventory.objects.all()
+    queryset = Inventory.objects.all().order_by('-id')
     serializer_class = InventoryModelSerializer
     search_fields = ['stock', 'batch']
     default_fields = [

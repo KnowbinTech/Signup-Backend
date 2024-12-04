@@ -159,6 +159,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "users.authentication.LogtoJWTAuthentication",
@@ -176,18 +181,41 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
     "DEFAULT_SCHEMA_CLASS": 'drf_spectacular.openapi.AutoSchema',
     "DATETIME_FORMAT": "%Y-%m-%d %I:%M %p",
+    "AUTHENTICATION_EXTENSIONS": "rest_framework_simplejwt.authentication.LogtoJWTAuthenticationExtension",
+    "DEFAULT_AUTHENTICATION_CLASSES_FOR_SCHEMA": "users.authentication.NoOpAuthentication"
 }
-
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "SignUp API",
     "DESCRIPTION": "Documentation of API endpoints of SignUp APP",
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.AllowAny"],
+    'SERVE_AUTHENTICATION': ["rest_framework.authentication.SessionAuthentication"],
+    "AUTHENTICATION_WHITELIST": None,
+    "SERVE_INCLUDE_SCHEMA": True,
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SECURITY": [{"bearerAuth": []}],
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": True,
+    },
+    'SWAGGER_UI_DIST': 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest',
+    'SWAGGER_UI_FAVICON_HREF': 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest/favicon-32x32.png',
+    'REDOC_DIST': 'https://cdn.jsdelivr.net/npm/redoc@latest',
+    'TAGS': [
+        {'name': 'Setup', 'description': 'Endpoints for setup and configuration'},
+        {'name': 'LOG TO', 'description': 'Endpoints for Log-to authentication'},
+        {'name': 'Account', 'description': 'User account management'},
+        {'name': 'Master Data', 'description': 'Endpoints for managing master data'},
+        {'name': 'Inventory', 'description': 'Inventory management'},
+        {'name': 'Products', 'description': 'Product-related endpoints'},
+        {'name': 'Customer', 'description': 'Customer-related operations'},
+        {'name': 'Orders', 'description': 'Order management'},
+        {'name': 'Transaction', 'description': 'Transaction processing'},
+        {'name': 'CMS', 'description': 'Content management system'},
+        {'name': 'Home', 'description': 'General endpoints for home or dashboard'},
+    ],
 }
 
 LOGTO_APP_ID = os.environ.get('LOGTO_APP_ID')
@@ -207,7 +235,7 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "sub",
     "USER_ID_FIELD": "sub",
 
-    # "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 # available settings with their default values
