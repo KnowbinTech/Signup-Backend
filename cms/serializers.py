@@ -15,6 +15,7 @@ class HeroSectionModelSerializer(serializers.ModelSerializer):
             'image',
             'short_description',
             'cta_text',
+            'is_in_shop_page',
             'link',
         )
 

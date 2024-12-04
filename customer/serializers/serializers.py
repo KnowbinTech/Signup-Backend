@@ -111,12 +111,9 @@ class UpdateCartProductSerializer(serializers.Serializer):
         quantity = attrs.get('quantity')
 
         obj = Variant.objects.get(pk=product_variant.id)
-
-        stock_check = obj.stock + quantity
-
-        if stock_check < 0:
+        if obj.stock < 0:
             raise serializers.ValidationError({
-                'quantity': 'Only have limited quantity'
+                'quantity': 'Out of Stock'
             })
 
         return attrs
