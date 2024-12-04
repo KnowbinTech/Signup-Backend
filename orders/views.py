@@ -80,6 +80,11 @@ class PlaceOrder(GenericViewSet, RetrieveModelMixin):
 
         cart_items = cart.cartitems.filter(deleted=False)
 
+        if not cart_items.exists():
+            return Response({
+                'message': 'No items in the cart to create an order.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
         order_items = []
         for item in cart_items:
             order_items.append(

@@ -62,6 +62,13 @@ class CartModelViewSet(GenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save(cart=cart)
 
+        # Reduce the stock of the product variant
+        product_variant = serializer.validated_data.get('product_variant')
+        quantity = serializer.validated_data.get('quantity')
+        variant = Variant.objects.get(pk=product_variant.id)
+        variant.stock -= quantity
+        variant.save()
+
         return Response({
             'data': serializer.data,
             'message': 'Successfully added to the cart.!'

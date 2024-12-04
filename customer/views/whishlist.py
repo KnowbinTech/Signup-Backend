@@ -46,7 +46,10 @@ class WishListModelViewSet(GenericViewSet, ListModelMixin):
             item = user.user_wishlist.get(product_variant_id=pk)
             item.delete()
         except Exception as e:
-            pass
+            return Response({
+                'message': 'Error remove wishlist',
+                'error': e
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response({
             'message': 'Successfully removed..!',
         }, status=status.HTTP_200_OK)

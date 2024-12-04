@@ -12,6 +12,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5174',
     'http://127.0.0.1:5173',
     "https://signupcasuals.com",
+    "https://www.signupcasuals.com",
     "https://manage.signupcasuals.com"
 ]
 
@@ -21,6 +22,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5174',
     'http://127.0.0.1:5173',
     "https://signupcasuals.com",
+    "https://www.signupcasuals.com",
     "https://manage.signupcasuals.com"
 ]
 

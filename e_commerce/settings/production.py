@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = True
+DEBUG = False
 
 INSTALLED_APPS = ["whitenoise.runserver_nostatic"] + INSTALLED_APPS
 
@@ -16,6 +16,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://backend.signupcasuals.com",
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
+    'https://www.signupcasuals.com',
     'https://signupbackend.knowbin.tech',
     'https://rahuldev.signupcasuals.com',
 ]
@@ -24,6 +25,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://backend.signupcasuals.com",
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
+    'https://www.signupcasuals.com',
     'https://signupbackend.knowbin.tech',
     'https://rahuldev.signupcasuals.com',
 ]
@@ -32,6 +34,7 @@ CORS_ORIGIN_WHITELIST = [
     "https://backend.signupcasuals.com",
     'https://manage.signupcasuals.com',
     'https://signupcasuals.com',
+    'https://www.signupcasuals.com',
     'https://signupbackend.knowbin.tech:8001',
     'https://signupbackend.knowbin.tech',
     'https://rahuldev.signupcasuals.com',
@@ -104,7 +107,7 @@ KEY_INDEX = os.environ.get('PHONE_PE_KEY_INDEX')
 
 PHONE_PAY_S2S_CALLBACK_URL = os.environ.get('PHONE_PAY_S2S_CALLBACK_URL')
 PHONE_PAY_REDIRECT_URL = os.environ.get('PHONE_PAY_REDIRECT_URL')
-
+"""
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -138,4 +141,4 @@ LOGGING = {
         },
     },
 }
-
+"""

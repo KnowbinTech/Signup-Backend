@@ -88,13 +88,13 @@ class Variant(BaseModel):
         self.save()
 
     def update_stock(self, quantity):
-        if quantity > 0:
-            updated_stock = self.stock - quantity
-            if updated_stock >= 0:
-                self.stock = updated_stock
-        else:
-            self.stock += quantity
+        print("stock", self.stock)
+        print("quantity", quantity)
+        self.stock -= quantity  # Subtract when positive, add when negative
+        if self.stock < 0:
+            raise ValueError("Stock cannot be negative.")
         self.save()
+        
 
     @classmethod
     def get_stock(cls, variant):

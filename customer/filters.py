@@ -15,6 +15,8 @@ from orders.models import Order
 
 class CustomerProductFilter(filters.FilterSet):
     categories = filters.CharFilter(method='generate_categories_view')
+    brand = filters.CharFilter(method='generate_brand_view')  
+    preferred_gender = filters.CharFilter(field_name='preferred_gender')
 
     def generate_categories_view(self, queryset, value, *args, **kwargs):
         try:
@@ -29,9 +31,19 @@ class CustomerProductFilter(filters.FilterSet):
             print('Exception occurred at the product section filter : ', str(e))
         return queryset
 
+    def generate_brand_view(self, queryset, value, *args, **kwargs):
+        try:
+            elements = args[0].split(',')
+            brand_values = [int(num) for num in elements]
+            if brand_values:
+                queryset = queryset.filter(brand__id__in=brand_values)
+        except Exception as e:
+            print('Exception occurred at the product brand filter : ', str(e))
+        return queryset
+
     class Meta:
         model = Products
-        fields = ['categories']
+        fields = ['categories', 'brand', 'preferred_gender']
 
 
 class CustomerVariantFilter(filters.FilterSet):
