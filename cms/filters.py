@@ -22,6 +22,7 @@ class HeroSectionFilter(filters.FilterSet):
             'cta_text',
             'short_description',
             'link',
+            'is_in_shop_page',
         ]
 
 
