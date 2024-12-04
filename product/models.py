@@ -13,6 +13,8 @@ from .manager import LooBookItemsManager
 from setup.utils import generate_presigned_url
 # from inventory.models import Tax
 
+from customer.models import WishList
+
 
 class Products(BaseModel):
     PREFERRED_GENDER = (
@@ -27,12 +29,13 @@ class Products(BaseModel):
     short_description = models.CharField(max_length=200, null=True, verbose_name='Short Description')
     description = models.TextField(verbose_name='Description', blank=True, null=True)
     sku = models.CharField(max_length=50, blank=True, verbose_name='SKU')
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Price') # MRP
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Price')  # MRP
     gst = models.ForeignKey('inventory.Tax', on_delete=models.SET_NULL, null=True, verbose_name='GST')
-    selling_price = models.DecimalField(max_digits=10, decimal_places=2,default=0, verbose_name='Selling Price')
+    selling_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name='Selling Price')
     # currency = models.CharField(max_length=3, default='INR',
     #                             verbose_name='Currency', null=True)  # [('USD', 'USD'), ('INR', 'INR')]
-    condition = models.CharField(max_length=50, verbose_name='Condition', blank=True, null=True)  # [('New', 'New'), ('Used', 'Used')]
+    condition = models.CharField(max_length=50, verbose_name='Condition', blank=True,
+                                 null=True)  # [('New', 'New'), ('Used', 'Used')]
 
     categories = models.ManyToManyField(Category,
                                         related_name='product_categories',
@@ -44,7 +47,8 @@ class Products(BaseModel):
 
     is_disabled = models.BooleanField(default=False, verbose_name='Disabled')
     hsn_code = models.CharField(max_length=20, blank=True, null=True, verbose_name='HSN Code')
-    tags = ArrayField(models.CharField(max_length=100, blank=True, null=True), blank=True, null=True, default=list, verbose_name='Tags')
+    tags = ArrayField(models.CharField(max_length=100, blank=True, null=True), blank=True, null=True, default=list,
+                      verbose_name='Tags')
 
     dimension = models.ForeignKey(
         Dimension, related_name='product_dimensions', on_delete=models.SET_NULL,
@@ -54,8 +58,6 @@ class Products(BaseModel):
     rating = models.CharField(max_length=120, verbose_name='Rating', blank=True, null=True)
     no_of_reviews = models.IntegerField(verbose_name='No. of Reviews', blank=True, null=True)
     preferred_gender = models.CharField(choices=PREFERRED_GENDER, max_length=50, blank=True, null=False)
-
-    is_wishlisted = models.BooleanField(default=False, verbose_name='Is Wishlisted')
 
     objects = ProductsManager()
 
@@ -69,11 +71,6 @@ class Products(BaseModel):
     def enable(self):
         self.is_disabled = True
         self.save()
-
-    def set_wishlisted(self):
-        self.is_wishlisted = not self.is_wishlisted
-        self.save()
-        return self.is_wishlisted
 
     def get_product_image(self):
         product_image = ProductImage.objects.filter(product__pk=self.pk).first()
@@ -168,7 +165,8 @@ class Collection(BaseModel):
 
     description = models.TextField(verbose_name='Description', blank=True, null=True)
     feature_image = models.FileField(upload_to='collections/', blank=True, null=True, verbose_name='Image')
-    tags = ArrayField(models.CharField(max_length=100, blank=True, null=True), blank=True, null=True, default=list, verbose_name='Tags')
+    tags = ArrayField(models.CharField(max_length=100, blank=True, null=True), blank=True, null=True, default=list,
+                      verbose_name='Tags')
     is_in_home_page = models.BooleanField(default=False, verbose_name='Display In Home Page')
 
     def __str__(self):
@@ -193,7 +191,8 @@ class LookBook(BaseModel):
     name = models.CharField(max_length=100, verbose_name='Name')
     description = models.TextField(verbose_name='Description', blank=True, null=True)
     feature_image = models.FileField(upload_to='lookbook/', blank=True, null=True, verbose_name='Image')
-    tags = ArrayField(models.CharField(max_length=100, blank=True, null=True), blank=True, null=True, default=list,verbose_name='Tags')
+    tags = ArrayField(models.CharField(max_length=100, blank=True, null=True), blank=True, null=True, default=list,
+                      verbose_name='Tags')
     is_in_home_page = models.BooleanField(default=False, verbose_name='Display In Home Page')
 
     def __str__(self):

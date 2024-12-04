@@ -31,6 +31,5 @@ router.register('manage/reviews', views.ReviewModelViewSet)
 
 urlpatterns = [
     path('add-review/', views.ReviewModelView.as_view(), name='add-review'),
-    path('wishlist-product/', views.WishlistProduct.as_view(), name='wishlist-product')
 ]
 urlpatterns += router.urls

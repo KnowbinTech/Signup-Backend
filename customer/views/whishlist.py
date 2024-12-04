@@ -26,30 +26,38 @@ class WishListModelViewSet(GenericViewSet, ListModelMixin):
     filterset_class = wishListFilter
     search_fields = ['name', 'brand__name']
 
-    @action(detail=False, methods=['POST'], url_path='add-to-wishlist', serializer_class=WishListModelSerializer)
-    def add_to_wishlist(self, request, *args, **kwargs):
+    @action(detail=False, methods=['POST'], url_path='wishlist-product', serializer_class=WishListModelSerializer)
+    def toggle_wishlist(self, request, *args, **kwargs):
         user = request.user
-        serializer = WishListModelSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(user=user)
+        product_id = request.data.get('id')
 
-        return Response({
-            'data': serializer.data,
-            'message': 'Successfully added to wishlist.!'
-        })
+        if not product_id:
+            return Response({
+                'message': 'Product ID is required.'
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['DELETE'], url_path='(?P<pk>.*?)/remove-wishlist')
-    def delete_from_cart(self, request, pk, *args, **kwargs):
         try:
-            user = request.user
-            item = user.user_wishlist.get(product_variant_id=pk)
-            item.delete()
+            wishlist_item = WishList.objects.filter(user__pk=user.id, product_id=product_id).first()
+            if wishlist_item:
+                wishlist_item.delete()
+                return Response({
+                    'is_wishlisted' : False,
+                    'message': 'Removed from Wishlist.'
+                }, status=status.HTTP_200_OK)
+            else:
+                # Pass the user to the serializer's context
+                serializer = WishListModelSerializer(data={'product': product_id}, context={'user': user})
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response({
+                    'is_wishlisted' : True,
+                    'message': 'Added to Wishlist.'
+                }, status=status.HTTP_201_CREATED)
+
         except Exception as e:
             return Response({
-                'message': 'Error remove wishlist',
-                'error': e
+                'message': 'Error toggling Wishlist.',
+                'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response({
-            'message': 'Successfully removed..!',
-        }, status=status.HTTP_200_OK)
+
 

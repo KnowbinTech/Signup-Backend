@@ -184,7 +184,6 @@ class VariantModelSerializerGET(serializers.ModelSerializer):
     product = ProductsModelSerializerGET()
     attributes = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
-    wish_listed = serializers.SerializerMethodField()
     created_by = serializers.SerializerMethodField()
     updated_by = serializers.SerializerMethodField()
 
@@ -196,11 +195,6 @@ class VariantModelSerializerGET(serializers.ModelSerializer):
 
     def get_attributes(self, attrs):
         return VariantAttributeModelSerializerGET(attrs.variant.all(), many=True).data
-
-    def get_wish_listed(self, attrs):
-        from setup.middleware.request import CurrentRequestMiddleware
-        request = CurrentRequestMiddleware.get_request()
-        return WishList.objects.filter(product_variant_id=attrs.id, user_id=request.user.id).exists()
 
     def get_images(self, attrs):
         return ProductImageModelSerializer(attrs.variant_images.all(), many=True).data

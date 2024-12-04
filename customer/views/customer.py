@@ -40,6 +40,8 @@ from customer.filters import CustomerCollectionFilter
 from customer.filters import CustomerLookBookFilter
 from customer.filters import CustomerOrderFilter
 
+from customer.models import WishList
+
 class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     """
         Get the list of variant products.
@@ -119,6 +121,8 @@ class CustomProductListView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
 
     def get_product_data(self, product):
         product_image = next(iter(product.product_images.all()), None)
+        user = self.request.user
+        is_wishlisted = WishList.objects.filter(product__pk=product.id, user=user.id).exists()
         return {
             'id': product.id,
             'name': product.name,
@@ -129,24 +133,8 @@ class CustomProductListView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
             'image': product_image.image.url if product_image and product_image.image else '',
             'rating': product.rating or '',
             'variants': product.get_distinct_variant_attributes(),
-            'is_wishlisted': product.is_wishlisted
+            'is_wishlisted': is_wishlisted
         }
-
-class WishlistProduct(APIView):
-    def post(self, request, *args, **kwargs):
-        product_id = request.data.get('id')
-        try:
-            product = Products.objects.get(id=product_id)
-            product.set_wishlisted()
-            return Response({
-                'is_wishlisted' : product.is_wishlisted,
-                'message' : 'Added to Wishlist' if product.is_wishlisted else 'Removed from Wishlist'
-            }, status=status.HTTP_200_OK)
-        except Exception as e:
-            print('Exception :', e)
-            return Response({
-                'message' : 'Failed to wishlist the product, Please try again later.'
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class CustomerLookBookViewSet(GenericViewSet, ListModelMixin):

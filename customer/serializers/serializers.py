@@ -126,18 +126,21 @@ class WishListModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = WishList
         fields = (
-            'product_variant',
+            'product',
         )
 
     def create(self, validated_data):
-        user = validated_data.pop('user')
+        user = self.context.get('user') or validated_data.pop('user', None)
+        if not user:
+            raise serializers.ValidationError({'user': 'User not Authenticated.'})
+
         obj, created = WishList.objects.get_or_create(user=user, **validated_data)
         return obj
 
 
 class WishListGETSerializer(serializers.ModelSerializer):
     user = UserDataModelSerializer()
-    product_variant = serializers.SerializerMethodField()
+    product = serializers.SerializerMethodField()
     created_by = serializers.SerializerMethodField()
     updated_by = serializers.SerializerMethodField()
 
