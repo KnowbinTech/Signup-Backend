@@ -1,36 +1,37 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Count, Prefetch
+
 from rest_framework.viewsets import GenericViewSet
+from rest_framework.views import APIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
-
-from django.db.models import Count
-
 from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.authentication import SessionAuthentication
 
-
-# from algoliasearch_django import raw_search
 from masterdata.models import Brand
+from masterdata.models import Category
+from masterdata.serializers import CategoryModelSerializerGET
+
 from product.models import Products
+from product.models import ProductImage
 from product.models import Variant
+from product.models import VariantAttributes
 from product.models import Collection
 from product.models import LookBook
-from masterdata.models import Category
-from orders.models import Order
-
-
 from product.serializers import ProductsModelSerializerGET
 from product.serializers import VariantModelSerializerGET
 from product.serializers import CollectionModelSerializerGET
 from product.serializers import LookBookModelSerializerGET
 from product.serializers import BrandSerializerGET
+
+from orders.models import Order
 from orders.serializers import OrderItemsModelSerializerGET
 
-from masterdata.serializers import CategoryModelSerializerGET
 
 from customer.filters import CustomerProductFilter
 from customer.filters import CustomerVariantFilter
@@ -38,8 +39,6 @@ from customer.filters import CustomerCategoryFilter
 from customer.filters import CustomerCollectionFilter
 from customer.filters import CustomerLookBookFilter
 from customer.filters import CustomerOrderFilter
-from rest_framework.authentication import SessionAuthentication
-
 
 class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     """
@@ -75,6 +74,98 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
             VariantModelSerializerGET(obj.product_variant.all(), many=True).data,
             status=status.HTTP_200_OK
         )
+    
+class CustomProductListView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
+    """
+    Optimized view to list variant products with pagination.
+    """
+    authentication_classes = [SessionAuthentication]
+    permission_classes = (AllowAny,)
+    queryset = Products.objects.all()
+    serializer_class = ProductsModelSerializerGET
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    filterset_class = CustomerProductFilter
+    search_fields = ['name', 'brand__name']
+
+    def get_queryset(self):
+        """
+        Optimized queryset to fetch only required fields and relationships.
+        """
+        return Products.objects.annotate(
+            variant_count=Count('product_variant')
+        ).filter(variant_count__gt=0).only('id', 'name', 'brand__id', 'brand__name', 'price', 'selling_price', 'rating'
+        ).prefetch_related(
+            Prefetch(
+                'product_images',
+                queryset=ProductImage.objects.only('id', 'image')
+            ),
+            Prefetch(
+                'product_variant__variant__attributes',
+                queryset=VariantAttributes.objects.only('id', 'name', 'value')
+            )
+        )
+
+    def list(self, request, *args, **kwargs):
+        """
+        List products with pagination and optimized data fetching.
+        """
+        queryset = self.filter_queryset(self.get_queryset())  # Apply filters
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            product_list = [self.get_product_data(product) for product in page]
+            return self.get_paginated_response(product_list)
+        product_list = [self.get_product_data(product) for product in queryset]
+        return Response(product_list, status=status.HTTP_200_OK)
+
+    def get_product_data(self, product):
+        product_image = next(iter(product.product_images.all()), None)
+        return {
+            'id': product.id,
+            'name': product.name,
+            'brand': product.brand.name if product.brand else '',
+            'brand_id': product.brand.id if product.brand else '',
+            'price': product.price,
+            'selling_price': product.selling_price,
+            'image': product_image.image.url if product_image and product_image.image else '',
+            'rating': product.rating or '',
+            'variants': product.get_distinct_variant_attributes(),
+            'is_wishlisted': product.is_wishlisted
+        }
+
+class WishlistProduct(APIView):
+    def post(self, request, *args, **kwargs):
+        product_id = request.data.get('id')
+        try:
+            product = Products.objects.get(id=product_id)
+            product.set_wishlisted()
+            return Response({
+                'is_wishlisted' : product.is_wishlisted,
+                'message' : 'Added to Wishlist' if product.is_wishlisted else 'Removed from Wishlist'
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            print('Exception :', e)
+            return Response({
+                'message' : 'Failed to wishlist the product, Please try again later.'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CustomerLookBookViewSet(GenericViewSet, ListModelMixin):
+    """
+        Get the list of products for home page listing.
+
+        Parameters:
+            request (HttpRequest): The HTTP request object containing model data.
+
+        Returns:
+            Response: A DRF Response object with the look book data.
+    """
+    authentication_classes = [SessionAuthentication]
+    permission_classes = (AllowAny,)
+    queryset = Products.objects.all()
+    serializer_class = ProductsModelSerializerGET
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    filterset_class = CustomerProductFilter
+    search_fields = ['name', 'brand__name']
 
 
 class CustomerVariantViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
@@ -105,13 +196,6 @@ class CustomerVariantViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
             VariantModelSerializerGET(obj.product.product_variant.all(), many=True).data,
             status=status.HTTP_200_OK
         )
-
-    # def list(self, request, *args, **kwargs):
-    #     query = request.query_params.get('query', '')
-    #     search_results = raw_search(Variant, query)  # Query Algolia index
-    #     serializer = self.get_serializer(search_results, many=True)
-    #     return Response(serializer.data, status=status.HTTP_200_OK)
-
 
 class CustomerCategoryViewSet(GenericViewSet, ListModelMixin):
     """

@@ -16,3 +16,6 @@ from .review import ReviewModelViewSet
 
 from .return_request import CustomerReturnViewSet
 from .return_request import ManageCustomerReturn
+
+from .customer import CustomProductListView
+from .customer import WishlistProduct

@@ -55,6 +55,8 @@ class Products(BaseModel):
     no_of_reviews = models.IntegerField(verbose_name='No. of Reviews', blank=True, null=True)
     preferred_gender = models.CharField(choices=PREFERRED_GENDER, max_length=50, blank=True, null=False)
 
+    is_wishlisted = models.BooleanField(default=False, verbose_name='Is Wishlisted')
+
     objects = ProductsManager()
 
     def __str__(self):
@@ -67,6 +69,28 @@ class Products(BaseModel):
     def enable(self):
         self.is_disabled = True
         self.save()
+
+    def set_wishlisted(self):
+        self.is_wishlisted = not self.is_wishlisted
+        self.save()
+        return self.is_wishlisted
+
+    def get_product_image(self):
+        product_image = ProductImage.objects.filter(product__pk=self.pk).first()
+        return product_image.image.url if product_image.image else ''
+
+    def get_distinct_variant_attributes(self):
+        from collections import defaultdict
+
+        product_variants = Variant.objects.filter(product=self).prefetch_related('variant__attributes')
+        attributes_categorized = defaultdict(set)
+
+        for variant in product_variants:
+            attributes_categorized['selling_price'].add(variant.selling_price)
+            for attr in variant.variant.all():
+                attributes_categorized[attr.attributes.name].add(attr.value)
+
+        return {key: list(values) for key, values in attributes_categorized.items()}
 
 
 class Variant(BaseModel):
@@ -88,13 +112,10 @@ class Variant(BaseModel):
         self.save()
 
     def update_stock(self, quantity):
-        print("stock", self.stock)
-        print("quantity", quantity)
         self.stock -= quantity  # Subtract when positive, add when negative
         if self.stock < 0:
             raise ValueError("Stock cannot be negative.")
         self.save()
-        
 
     @classmethod
     def get_stock(cls, variant):
