@@ -16,8 +16,6 @@ from .serializers import HeroSectionModelSerializer
 from .serializers import HeroSectionModelSerializerGET
 from rest_framework.authentication import SessionAuthentication
 
-from setup.utils import upload_image_to_wasabi
-
 
 class HeroSectionModelViewSet(BaseModelViewSet, ExportData):
     queryset = HeroSection.objects.all().order_by('-id')
