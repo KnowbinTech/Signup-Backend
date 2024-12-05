@@ -16,6 +16,7 @@ router.register('customers', views.CustomerViewSet)
 
 urlpatterns = [
     path('user/email/', views.TestMail.as_view(), name='user-mail'),
+    path('user/subscribe/', views.SubscribeToSignup.as_view(), name='subscribe-to-signup'),
 
     path('user/sign-up/', views.Signup.as_view(), name='user-signup'),
     path('user/change-password/', views.ChangePassword.as_view(), name='change-password'),

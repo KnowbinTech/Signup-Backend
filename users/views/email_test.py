@@ -7,7 +7,6 @@ from django.core.mail import send_mail
 class TestMail(APIView):
 
     def post(self, request, *args, **kwargs):
-
         subject = 'Test Mail'
         message = 'This is test mail'
         email_from = settings.EMAIL_HOST_USER

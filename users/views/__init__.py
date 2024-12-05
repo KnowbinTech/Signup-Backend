@@ -4,7 +4,7 @@ from .sessions import Logout
 from .sessions import ChangePassword
 
 from .email_test import TestMail
-
+from .user import SubscribeToSignup
 
 from .token import TokenLoginAPTView
 from .token import LoginStatus
