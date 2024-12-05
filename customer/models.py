@@ -7,8 +7,6 @@ from setup.middleware.request import CurrentRequestMiddleware
 
 from users.models.base_model import BaseModel
 from users.models import User
-from product.models import Variant
-from product.models import Products
 from masterdata.models import ReturnReason
 
 
@@ -31,8 +29,8 @@ class WishList(BaseModel):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='user_wishlist', verbose_name='User', null=True
     )
-    product_variant = models.ForeignKey(
-        Variant, on_delete=models.CASCADE, related_name='wishlist_product', verbose_name='Product'
+    product = models.ForeignKey(
+        'product.Products', on_delete=models.CASCADE, related_name='product_wishlist', verbose_name='Product', null=True
     )
 
     def __str__(self):
@@ -86,7 +84,8 @@ class Cart(BaseModel):
 
 class CartItem(BaseModel):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cartitems', verbose_name='Cart Details')
-    product_variant = models.ForeignKey(Variant, on_delete=models.CASCADE, related_name='cart_product', verbose_name='Product Variant')
+    product_variant = models.ForeignKey('product.Variant', on_delete=models.CASCADE, related_name='cart_product',
+                                        verbose_name='Product Variant')
     quantity = models.IntegerField(default=1, verbose_name='Quantity')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Total Amount')
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Price')
@@ -112,7 +111,7 @@ class Review(BaseModel):
     )
 
     product = models.ForeignKey(
-        Products, on_delete=models.SET_NULL,
+        'product.Products', on_delete=models.SET_NULL,
         related_name='product_review', null=True,
         verbose_name="Product"
     )
@@ -184,9 +183,9 @@ class Return(BaseModel):
         null=True,
         verbose_name='Order'
     )
-    
+
     product = models.ForeignKey(
-        Variant, on_delete=models.SET_NULL, related_name='return_product',
+        'product.Variant', on_delete=models.SET_NULL, related_name='return_product',
         verbose_name='Product', null=True
     )
 
@@ -217,10 +216,12 @@ class Return(BaseModel):
     rejected_at = models.DateTimeField(blank=True, null=True, verbose_name='Rejected Date')
 
     # Refund
-    refund_status = FSMIntegerField(default=REFUND_PENDING, choices=REFUND_CHOICES, verbose_name='Refund Status', protected=True)
+    refund_status = FSMIntegerField(default=REFUND_PENDING, choices=REFUND_CHOICES, verbose_name='Refund Status',
+                                    protected=True)
 
     refund_tracking_id = models.CharField(max_length=256, blank=True, null=True, verbose_name='Refund Tracking ID')
-    refund_shipping_agent = models.CharField(max_length=256, blank=True, null=True, verbose_name='Refund Shipping Agent')
+    refund_shipping_agent = models.CharField(max_length=256, blank=True, null=True,
+                                             verbose_name='Refund Shipping Agent')
     refund_transaction_id = models.CharField(max_length=256, blank=True, null=True, verbose_name='Refund Tracking ID')
 
     def save(self, *args, **kwargs):
@@ -255,6 +256,3 @@ class Return(BaseModel):
     @transition(field=refund_status, source=['Refund Initiated'], target='Refunded')
     def refunded(self):
         return f"{self.return_id} moved to Refunded"
-
-
-

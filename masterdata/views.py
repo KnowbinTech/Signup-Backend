@@ -11,6 +11,7 @@ from .models import Attribute
 from .models import AttributeGroup
 from .models import Dimension
 from .models import ReturnReason
+from product.models import Products
 
 from .serializers import CategoryModelSerializer
 from .serializers import CategoryModelSerializerGET
@@ -28,7 +29,7 @@ from .serializers import ReturnReasonModelSerializerGET
 from .filters import CategoryFilter
 from .filters import BrandFilter
 from .filters import AttributeGroupFilter
-from setup.utils import upload_image_to_wasabi
+from django.shortcuts import get_object_or_404
 
 
 
@@ -62,6 +63,29 @@ class CategoryModelViewSet(BaseModelViewSet, ExportData):
             'message': f'{obj.name} successfully activated.!'
         }, status=status.HTTP_200_OK)
 
+    @action(detail=True, methods=['DELETE'])
+    def delete_record(self, request, *args, **kwargs):
+        # Retrieve the specific attribute instance
+        category = get_object_or_404(Category, pk=kwargs.get('pk'))
+
+        id = kwargs.get('pk')  # This should give you '1' in this case
+
+        if Products.objects.filter(categories=id, deleted=False).exists():
+            return Response(
+            {
+                'message': 'Cannot delete category. It is linked to one or more Products.'
+            },
+            status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        category.deleted = True
+        category.save()
+        return Response(
+            {
+                'message': 'Category has been deleted successfully.'
+            },
+            status=status.HTTP_200_OK
+        )
 
 class BrandModelViewSet(BaseModelViewSet, ExportData):
     queryset = Brand.objects.all()
@@ -88,6 +112,30 @@ class BrandModelViewSet(BaseModelViewSet, ExportData):
         return Response({
             'message': f'{obj.name} successfully activated.!'
         }, status=status.HTTP_200_OK)
+    
+        @action(detail=True, methods=['DELETE'])
+        def delete_record(self, request, *args, **kwargs):
+            
+            brand = get_object_or_404(Brand, pk=kwargs.get('pk'))
+
+            id = kwargs.get('pk')  # This should give you '1' in this case
+
+            if Products.objects.filter(brand=id, deleted=False).exists():
+                return Response(
+                {
+                    'message': 'Cannot delete brand. It is linked to one or more Products.'
+                },
+                status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            brand.deleted = True
+            brand.save()
+            return Response(
+                {
+                    'message': 'Brand has been deleted successfully.'
+                },
+                status=status.HTTP_200_OK
+            )
 
 
 class AttributeModelViewSet(BaseModelViewSet, ExportData):
@@ -97,6 +145,31 @@ class AttributeModelViewSet(BaseModelViewSet, ExportData):
     search_fields = ['name']
     default_fields = ['name', 'value']
 
+        
+    @action(detail=True, methods=['DELETE'])
+    def delete_record(self, request, *args, **kwargs):
+        # Retrieve the specific attribute instance
+        attribute = get_object_or_404(Attribute, pk=kwargs.get('pk'))
+
+        id = kwargs.get('pk')  # This should give you '1' in this case
+
+        if AttributeGroup.objects.filter(attributes=id, deleted=False).exists():
+            return Response(
+            {
+                'message': 'Cannot delete attribute. It is linked to one or more AttributeGroups.'
+            },
+            status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        attribute.deleted = True
+        attribute.save()
+        return Response(
+            {
+                'message': 'Attribute has been deleted successfully.'
+            },
+            status=status.HTTP_200_OK
+        )
+
 
 class AttributeGroupModelViewSet(BaseModelViewSet, ExportData):
     queryset = AttributeGroup.objects.all()
@@ -105,6 +178,30 @@ class AttributeGroupModelViewSet(BaseModelViewSet, ExportData):
     search_fields = ['name']
     default_fields = ['name', 'attributes']
     filterset_class = AttributeGroupFilter
+
+    @action(detail=True, methods=['DELETE'])
+    def delete_record(self, request, *args, **kwargs):
+        # Retrieve the specific attribute instance
+        attribute_group = get_object_or_404(AttributeGroup, pk=kwargs.get('pk'))
+
+        id = kwargs.get('pk')  # This should give you '1' in this case
+
+        if Category.objects.filter(attribute_group_id=id, deleted=False).exists():
+            return Response(
+            {
+                'message': 'Cannot delete attribute group. It is linked to one or more Categories.'
+            },
+            status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        attribute_group.deleted = True
+        attribute_group.save()
+        return Response(
+            {
+                'message': 'Attribute Group has been deleted successfully.'
+            },
+            status=status.HTTP_200_OK
+        )
 
 
 class DimensionModelViewSet(BaseModelViewSet, ExportData):
