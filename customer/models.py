@@ -76,9 +76,9 @@ class Cart(BaseModel):
 
     @classmethod
     def get_user_cart(cls):
-        request = CurrentRequestMiddleware.get_request()
+        user = CurrentRequestMiddleware.get_request().user
         cart, created = cls.objects.get_or_create(
-            user_id=request.user.id, deleted=False,
+            user_id=user.id, deleted=False,
             is_completed=False
         )
         return cart
