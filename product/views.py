@@ -184,15 +184,13 @@ class ProductsModelViewSet(BaseModelViewSet, ExportData):
             if in_lookbook:
                 linked_to.append("Look Book")
             message = f"Cannot delete product. It is already linked to one or more {' and '.join(linked_to)}."
-            status_code = status.HTTP_400_BAD_REQUEST
 
         else:
             products.deleted = True
             products.save()
             message = "Product has been deleted successfully."
-            status_code = status.HTTP_200_OK
 
-        return Response({'message': message}, status=status_code)
+        return Response({'message': message}, status=status.HTTP_200_OK)
 
 
 class VariantModelViewSet(BaseModelViewSet):

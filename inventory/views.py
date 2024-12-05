@@ -40,7 +40,7 @@ class TaxModelViewSet(BaseModelViewSet):
             {
                 'message': 'Cannot delete tax. It is linked to one or more Products.'
             },
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_200_OK
             )
         
         tax.deleted = True

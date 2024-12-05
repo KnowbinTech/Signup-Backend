@@ -75,7 +75,7 @@ class CategoryModelViewSet(BaseModelViewSet, ExportData):
             {
                 'message': 'Cannot delete category. It is linked to one or more Products.'
             },
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_200_OK
             )
         
         category.deleted = True
@@ -113,29 +113,29 @@ class BrandModelViewSet(BaseModelViewSet, ExportData):
             'message': f'{obj.name} successfully activated.!'
         }, status=status.HTTP_200_OK)
     
-        @action(detail=True, methods=['DELETE'])
-        def delete_record(self, request, *args, **kwargs):
-            
-            brand = get_object_or_404(Brand, pk=kwargs.get('pk'))
+    @action(detail=True, methods=['DELETE'])
+    def delete_record(self, request, *args, **kwargs):
+        
+        brand = get_object_or_404(Brand, pk=kwargs.get('pk'))
 
-            id = kwargs.get('pk')  # This should give you '1' in this case
+        id = kwargs.get('pk')  # This should give you '1' in this case
 
-            if Products.objects.filter(brand=id, deleted=False).exists():
-                return Response(
-                {
-                    'message': 'Cannot delete brand. It is linked to one or more Products.'
-                },
-                status=status.HTTP_400_BAD_REQUEST
-                )
-            
-            brand.deleted = True
-            brand.save()
+        if Products.objects.filter(brand=id, deleted=False).exists():
             return Response(
-                {
-                    'message': 'Brand has been deleted successfully.'
-                },
-                status=status.HTTP_200_OK
+            {
+                'message': 'Cannot delete brand. It is linked to one or more Products.'
+            },
+            status=status.HTTP_200_OK
             )
+        
+        brand.deleted = True
+        brand.save()
+        return Response(
+            {
+                'message': 'Brand has been deleted successfully.'
+            },
+            status=status.HTTP_200_OK
+        )
 
 
 class AttributeModelViewSet(BaseModelViewSet, ExportData):
@@ -158,7 +158,7 @@ class AttributeModelViewSet(BaseModelViewSet, ExportData):
             {
                 'message': 'Cannot delete attribute. It is linked to one or more AttributeGroups.'
             },
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_200_OK
             )
         
         attribute.deleted = True
@@ -191,7 +191,7 @@ class AttributeGroupModelViewSet(BaseModelViewSet, ExportData):
             {
                 'message': 'Cannot delete attribute group. It is linked to one or more Categories.'
             },
-            status=status.HTTP_400_BAD_REQUEST
+            status=status.HTTP_200_OK
             )
         
         attribute_group.deleted = True
