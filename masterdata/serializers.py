@@ -7,7 +7,7 @@ from .models import Attribute
 from .models import AttributeGroup
 from .models import Dimension
 from .models import ReturnReason
-from setup.utils import generate_presigned_url
+
 
 
 class BrandModelSerializer(serializers.ModelSerializer):

@@ -9,6 +9,7 @@ from setup.utils import compress_image
 
 from product.models import Products
 from product.models import Variant
+from masterdata.models import Category
 from product.models import ProductImage
 from product.models import Collection
 from product.models import CollectionItems
@@ -40,7 +41,7 @@ from product.filters import LookBookFilter
 from product.filters import CollectionItemsFilter
 from product.filters import LookBookItemsFilter
 
-from setup.utils import upload_image_to_wasabi
+from django.shortcuts import get_object_or_404
 
 
 class ProductsModelViewSet(BaseModelViewSet, ExportData):
@@ -165,6 +166,33 @@ class ProductsModelViewSet(BaseModelViewSet, ExportData):
         return Response({
             'message': f'{obj.name} successfully added to the look book.!'
         }, status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=['DELETE'])
+    def delete_record(self, request, *args, **kwargs):
+        # Retrieve the specific attribute instance
+        products = get_object_or_404(Products, pk=kwargs.get('pk'))
+
+        id = kwargs.get('pk')  # This should give you '1' in this case
+
+        in_collection = CollectionItems.objects.filter(product=id, deleted=False).exists()
+        in_lookbook = LookBookItems.objects.filter(product=id, deleted=False).exists()
+
+        if in_collection or in_lookbook:
+            linked_to = []
+            if in_collection:
+                linked_to.append("Collection")
+            if in_lookbook:
+                linked_to.append("Look Book")
+            message = f"Cannot delete product. It is already linked to one or more {' and '.join(linked_to)}."
+            status_code = status.HTTP_400_BAD_REQUEST
+
+        else:
+            products.deleted = True
+            products.save()
+            message = "Product has been deleted successfully."
+            status_code = status.HTTP_200_OK
+
+        return Response({'message': message}, status=status_code)
 
 
 class VariantModelViewSet(BaseModelViewSet):
