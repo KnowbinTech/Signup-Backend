@@ -122,17 +122,12 @@ class UpdateCartProductSerializer(serializers.Serializer):
 class WishListModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = WishList
-        fields = (
-            'product',
-        )
+        fields = ['product']
 
     def create(self, validated_data):
-        user = self.context.get('user') or validated_data.pop('user', None)
-        if not user:
-            raise serializers.ValidationError({'user': 'User not Authenticated.'})
-
-        obj, created = WishList.objects.get_or_create(user=user, **validated_data)
-        return obj
+        user = self.context.get('user')
+        wishlist_item = WishList.objects.create(user=user, **validated_data)
+        return wishlist_item
 
 
 class WishListGETSerializer(serializers.ModelSerializer):
@@ -147,9 +142,8 @@ class WishListGETSerializer(serializers.ModelSerializer):
     def get_updated_by(self, attrs):
         return str(attrs.updated_by if attrs.updated_by else '')
 
-    def get_product_variant(self, attrs):
-        from product.serializers import VariantModelSerializerGET
-        return VariantModelSerializerGET(attrs.product_variant).data
+    def get_product(self, attrs):
+        return str(attrs.product if attrs.product else '')
 
     class Meta:
         model = WishList
