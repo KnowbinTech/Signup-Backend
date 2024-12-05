@@ -54,8 +54,8 @@ class CartModelViewSet(GenericViewSet):
             Returns:
                 Response: A DRF Response object indicating success or failure and a message.
         """
-
         cart = Cart.get_user_cart()
+        
         serializer = AddToCartSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(cart=cart)
