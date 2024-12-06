@@ -83,7 +83,7 @@ class CustomProductListView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     """
     authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
-    queryset = Products.objects.all()
+    queryset = Products.objects.filter(deleted=False)
     serializer_class = ProductsModelSerializerGET
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = CustomerProductFilter
@@ -93,42 +93,52 @@ class CustomProductListView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
         """
         Optimized queryset to fetch only required fields and relationships.
         """
-        queryset = (Products.objects.annotate(variant_count=Count('product_variant'))
-        .filter(variant_count__gt=0)
-        .only('id', 'name', 'brand__id', 'brand__name', 'price', 'selling_price', 'rating')
-        .prefetch_related(
-            Prefetch(
-                'product_images',
-                queryset=ProductImage.objects.only('id', 'image')
-            ),
-            Prefetch(
-                'product_variant__variant__attributes',
-                queryset=VariantAttributes.objects.only('id', 'name', 'value')
+        queryset = (
+            self.queryset.annotate(variant_count=Count('product_variant'))
+            .filter(variant_count__gt=0)
+            .only('id', 'name', 'brand__id', 'brand__name', 'price', 'selling_price', 'rating')
+            .prefetch_related(
+                Prefetch(
+                    'product_images',
+                    queryset=ProductImage.objects.only('id', 'image')
+                ),
+                Prefetch(
+                    'product_variant__variant__attributes',
+                    queryset=VariantAttributes.objects.only('id', 'name', 'value')
+                )
             )
-        ))
+        )
         # Wishlist filter logic
-        wishlisted = self.request.query_params.get('wishlist', None)
-        username = self.request.query_params.get('username', None)
-        if wishlisted:
-            queryset = queryset.filter(product_wishlist__user__username=username)
+        wishlisted = self.request.query_params.get('wishlist')
+        username = self.request.query_params.get('username')
+        if wishlisted and username:
+            queryset = Products.objects.filter(product_wishlist__user__username=username, product_wishlist__deleted=False)
         return queryset
 
     def list(self, request, *args, **kwargs):
         """
         List products with pagination and optimized data fetching.
         """
-        queryset = self.filter_queryset(self.get_queryset())  # Apply filters
+        queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
+
+        # Use paginated response if applicable
+        product_list = [
+            self.get_product_data(product) for product in (page if page is not None else queryset)
+        ]
         if page is not None:
-            product_list = [self.get_product_data(product) for product in page]
             return self.get_paginated_response(product_list)
-        product_list = [self.get_product_data(product) for product in queryset]
         return Response(product_list, status=status.HTTP_200_OK)
 
     def get_product_data(self, product):
+        """
+        Build and return product data dictionary.
+        """
         product_image = next(iter(product.product_images.all()), None)
-        username = self.request.query_params.get('username', None)
-        is_wishlisted = product.product_wishlist.filter(user__username=username).exists()
+        username = self.request.query_params.get('username')
+        is_wishlisted = (product.product_wishlist
+                 .filter(user__username=username, deleted=False)
+                 .exists() if username else False)
         return {
             'id': product.id,
             'name': product.name,
@@ -139,7 +149,7 @@ class CustomProductListView(GenericViewSet, ListModelMixin, RetrieveModelMixin):
             'image': product_image.image.url if product_image and product_image.image else '',
             'rating': product.rating or '',
             'variants': product.get_distinct_variant_attributes(),
-            'is_wishlisted': is_wishlisted
+            'is_wishlisted': is_wishlisted,
         }
 
 class CustomerLookBookViewSet(GenericViewSet, ListModelMixin):
