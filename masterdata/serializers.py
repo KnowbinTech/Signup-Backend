@@ -178,6 +178,7 @@ class DimensionModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dimension
         fields = (
+            'name',
             'length',
             'breadth',
             'height',
