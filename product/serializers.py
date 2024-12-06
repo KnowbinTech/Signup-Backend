@@ -111,6 +111,7 @@ class ProductsModelSerializerGET(serializers.ModelSerializer):
     updated_by = serializers.SerializerMethodField()
     stock = serializers.SerializerMethodField()
     gst = TaxModelSerializerGET()
+    is_wishlisted = serializers.SerializerMethodField()
 
     def get_stock(self, attrs):
         total_stock = attrs.product_variant.aggregate(total=Sum('stock'))['total']
@@ -124,6 +125,12 @@ class ProductsModelSerializerGET(serializers.ModelSerializer):
 
     def get_images(self, attrs):
         return ProductImageModelSerializer(attrs.product_images.all(), many=True).data
+
+    def get_is_wishlisted(self, attrs):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            return attrs.product_wishlist.filter(user=request.user.id, deleted=False).exists()
+        return False
 
     class Meta:
         model = Products

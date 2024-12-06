@@ -23,6 +23,7 @@ from product.models import Variant
 from product.models import VariantAttributes
 from product.models import Collection
 from product.models import LookBook
+from product.serializers import ProductsModelSerializer
 from product.serializers import ProductsModelSerializerGET
 from product.serializers import VariantModelSerializerGET
 from product.serializers import CollectionModelSerializerGET
@@ -55,16 +56,27 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
     authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     queryset = Products.objects.all()
-    serializer_class = ProductsModelSerializerGET
+    serializer_class = ProductsModelSerializer
+    retrieve_serializer_class = ProductsModelSerializerGET
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = CustomerProductFilter
     search_fields = ['name', 'brand__name']
 
-    def get_queryset(self):
+    def get_queryset(self, *args, **kwargs):
         """
         Exclude products with no variants.
         """
         return Products.objects.annotate(variant_count=Count('product_variant')).filter(variant_count__gt=0)
+
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return self.retrieve_serializer_class
+        return self.serializer_class
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
     @action(detail=True, methods=['GET'], url_path='other-variants')
     def other_variants(self, request, *args, **kwargs):
