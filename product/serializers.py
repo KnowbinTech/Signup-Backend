@@ -370,7 +370,7 @@ class AddToLookBookSerializer(serializers.Serializer):
 
 class AddProductCollectionSerializer(serializers.Serializer):
     product = serializers.PrimaryKeyRelatedField(
-        queryset=Products.objects.all()
+        queryset=Products.objects.all().order_by('-id')
     )
 
 

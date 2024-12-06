@@ -4,6 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import AllowAny
 from rest_framework.authentication import SessionAuthentication
+from drf_spectacular.utils import extend_schema
 
 from customer.models import Cart
 from product.models import Variant
@@ -13,6 +14,7 @@ from customer.serializers import UpdateCartProductSerializer
 from customer.serializers import AddToCartSerializer
 
 
+@extend_schema(tags=["Customer"])
 class SessionCartModelViewSet(GenericViewSet):
     authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)

@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-
+from drf_spectacular.utils import extend_schema
 from setup.views import BaseModelViewSet
 from setup.export import ExportData
 
@@ -32,7 +32,7 @@ from .filters import AttributeGroupFilter
 from django.shortcuts import get_object_or_404
 
 
-
+@extend_schema(tags=["Master Data"])
 class CategoryModelViewSet(BaseModelViewSet, ExportData):
     queryset = Category.objects.all().order_by('id')
     serializer_class = CategoryModelSerializer
@@ -43,7 +43,6 @@ class CategoryModelViewSet(BaseModelViewSet, ExportData):
         'second_parent_category', 'attribute_group'
     ]
     filterset_class = CategoryFilter
-
 
     @action(detail=True, methods=['POST'], url_path='deactivate')
     def deactivate(self, request, *args, **kwargs):
@@ -87,8 +86,9 @@ class CategoryModelViewSet(BaseModelViewSet, ExportData):
             status=status.HTTP_200_OK
         )
 
+@extend_schema(tags=["Master Data"])
 class BrandModelViewSet(BaseModelViewSet, ExportData):
-    queryset = Brand.objects.all()
+    queryset = Brand.objects.all().order_by('-id')
     serializer_class = BrandModelSerializer
     retrieve_serializer_class = BrandModelSerializerGET
     search_fields = ['name']
@@ -138,8 +138,9 @@ class BrandModelViewSet(BaseModelViewSet, ExportData):
         )
 
 
+@extend_schema(tags=["Master Data"])
 class AttributeModelViewSet(BaseModelViewSet, ExportData):
-    queryset = Attribute.objects.all()
+    queryset = Attribute.objects.all().order_by('-id')
     serializer_class = AttributeModelSerializer
     retrieve_serializer_class = RetrieveAttributeModelSerializer
     search_fields = ['name']
@@ -171,8 +172,9 @@ class AttributeModelViewSet(BaseModelViewSet, ExportData):
         )
 
 
+@extend_schema(tags=["Master Data"])
 class AttributeGroupModelViewSet(BaseModelViewSet, ExportData):
-    queryset = AttributeGroup.objects.all()
+    queryset = AttributeGroup.objects.all().order_by('-id')
     serializer_class = AttributeGroupModelSerializer
     retrieve_serializer_class = RetrieveAttributeGroupModelSerializer
     search_fields = ['name']
@@ -204,8 +206,9 @@ class AttributeGroupModelViewSet(BaseModelViewSet, ExportData):
         )
 
 
+@extend_schema(tags=["Master Data"])
 class DimensionModelViewSet(BaseModelViewSet, ExportData):
-    queryset = Dimension.objects.all()
+    queryset = Dimension.objects.all().order_by('-id')
     serializer_class = DimensionModelSerializer
     retrieve_serializer_class = RetrieveDimensionModelSerializer
     search_fields = ['length']
@@ -215,8 +218,9 @@ class DimensionModelViewSet(BaseModelViewSet, ExportData):
     ]
 
 
+@extend_schema(tags=["Master Data"])
 class ReturnReasonModelViewSet(BaseModelViewSet, ExportData):
-    queryset = ReturnReason.objects.all()
+    queryset = ReturnReason.objects.all().order_by('-id')
     serializer_class = ReturnReasonModelSerializer
     retrieve_serializer_class = ReturnReasonModelSerializerGET
     search_fields = ['title']

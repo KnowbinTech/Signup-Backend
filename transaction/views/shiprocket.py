@@ -3,10 +3,12 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.utils import extend_schema
 from django.db.models import Max
 from transaction.mixins import ShipRocket
 
 
+@extend_schema(tags=["Transaction"])
 class ShipRocketViewSet(ViewSet):
     permission_classes = (IsAuthenticated,)
 
@@ -82,7 +84,7 @@ class ShipRocketUtility:
             'billing_state': obj.address.state,
             'billing_country': obj.address.country if obj.address.country else 'INDIA',
             'billing_email': obj.address.user.email,
-            'billing_phone': '7994977797',
+            'billing_phone': obj.address.contact_number,
             'shipping_is_billing': True,
             'order_items': post_order_items,
             'payment_method': "Prepaid",
@@ -91,30 +93,19 @@ class ShipRocketUtility:
             'transaction_charges': 0,
             'total_discount': 0,
             'sub_total': str(obj.total_amount),
-            'length': '20',
-            'breadth': '20',
-            'height': '10',
-            'weight': '2.5'
+            'length': length,
+            'breadth': breadth,
+            'height': height,
+            'weight': weight
         }
 
         ship_rocket = ShipRocket()
-        import logging
-
-        logger = logging.getLogger('django')
-        logger.error(f"This is a test error message. :  {payload}", )
-
-        print('------------------------------------------')
-        print('payload : ', payload)
-        print('------------------------------------------')
 
         data = ship_rocket.create_order(payload)
-        logger.error(f"shipment_id. :  {data}", )
         shipment_id = data.get('shipment_id')
         obj.shipping_id = shipment_id
+        ship_rocket.request_for_shipment(shipment_id)
         return data
-        # logger.error(f"shipment_id. :  {shipment_id}", )
-        # ship_rocket.request_for_shipment(shipment_id)
-        # return data
 
 
 
