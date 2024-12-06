@@ -12,7 +12,6 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:5174',
     'http://127.0.0.1:5173',
     "https://signupcasuals.com",
-    "https://www.signupcasuals.com",
     "https://manage.signupcasuals.com"
 ]
 
@@ -22,20 +21,30 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5174',
     'http://127.0.0.1:5173',
     "https://signupcasuals.com",
-    "https://www.signupcasuals.com",
     "https://manage.signupcasuals.com"
 ]
 
 SECURE_BROWSER_XSS_FILTER = True
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.environ.get('DB_NAME'),
+#         'USER': os.environ.get('DB_USER'),
+#         'PASSWORD': os.environ.get('DB_PASSWORD'),
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'NAME': 'signupdb',
+        'USER': 'signupadmin',
+        'PASSWORD': 'HelloSignup789',
         'HOST': '135.181.1.40',
-        'PORT': '5472',
+        'PORT': '5433',
     }
 }
 

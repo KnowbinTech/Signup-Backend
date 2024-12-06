@@ -18,6 +18,9 @@ from users.serializers import ResetPassword
 
 from users.utils import get_userdata
 
+from django.conf import settings
+from django.core.mail import send_mail
+
 
 @extend_schema(tags=["Account"])
 @method_decorator(ensure_csrf_cookie, name='dispatch')
@@ -62,7 +65,6 @@ class ProfileUpdate(APIView):
     serializer_class = ProfileUpdateSerializer
 
     def post(self, request, *args, **kwargs):
-
         user = request.user
 
         serializer = self.serializer_class(data=request.data, instance=user)
@@ -102,4 +104,17 @@ class ChangePassword(APIView):
                 'success': True,
                 'message': 'Successfully Password Updated'
             }, status=status.HTTP_200_OK)
+
+
+class SubscribeToSignup(APIView):
+
+    def post(self, request, *args, **kwargs):
+        subject = 'Welcome to SIGN UP Casuals'
+        message = 'You have subscribed to SIGN UP Casuals'
+        email_from = settings.EMAIL_HOST_USER
+        email = ['sanjayskumar200@gmail.com']
+
+        send_mail(subject, message, email_from, email)
+
+        return Response('Success')
 

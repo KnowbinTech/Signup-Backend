@@ -8,7 +8,6 @@ from .serializers import ReviewSerializerPOST
 from .serializers import ReviewSerializer
 from .serializers import ReviewImageSerializer
 
-
 from .return_request import ReturnModelSerializer
 from .return_request import ReturnTrackingUpdateSerializer
 from .return_request import ReturnModelSerializerGET

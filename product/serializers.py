@@ -111,6 +111,7 @@ class ProductsModelSerializerGET(serializers.ModelSerializer):
     updated_by = serializers.SerializerMethodField()
     stock = serializers.SerializerMethodField()
     gst = TaxModelSerializerGET()
+    is_wishlisted = serializers.SerializerMethodField()
 
     def get_stock(self, attrs):
         total_stock = attrs.product_variant.aggregate(total=Sum('stock'))['total']
@@ -124,6 +125,12 @@ class ProductsModelSerializerGET(serializers.ModelSerializer):
 
     def get_images(self, attrs):
         return ProductImageModelSerializer(attrs.product_images.all(), many=True).data
+
+    def get_is_wishlisted(self, attrs):
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            return attrs.product_wishlist.filter(user=request.user.id, deleted=False).exists()
+        return False
 
     class Meta:
         model = Products
@@ -184,7 +191,6 @@ class VariantModelSerializerGET(serializers.ModelSerializer):
     product = ProductsModelSerializerGET()
     attributes = serializers.SerializerMethodField()
     images = serializers.SerializerMethodField()
-    wish_listed = serializers.SerializerMethodField()
     created_by = serializers.SerializerMethodField()
     updated_by = serializers.SerializerMethodField()
 
@@ -196,11 +202,6 @@ class VariantModelSerializerGET(serializers.ModelSerializer):
 
     def get_attributes(self, attrs):
         return VariantAttributeModelSerializerGET(attrs.variant.all(), many=True).data
-
-    def get_wish_listed(self, attrs):
-        from setup.middleware.request import CurrentRequestMiddleware
-        request = CurrentRequestMiddleware.get_request()
-        return WishList.objects.filter(product_variant_id=attrs.id, user_id=request.user.id).exists()
 
     def get_images(self, attrs):
         return ProductImageModelSerializer(attrs.variant_images.all(), many=True).data

@@ -122,19 +122,17 @@ class UpdateCartProductSerializer(serializers.Serializer):
 class WishListModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = WishList
-        fields = (
-            'product_variant',
-        )
+        fields = ['product']
 
     def create(self, validated_data):
-        user = validated_data.pop('user')
-        obj, created = WishList.objects.get_or_create(user=user, **validated_data)
-        return obj
+        user = self.context.get('user')
+        wishlist_item = WishList.objects.create(user=user, **validated_data)
+        return wishlist_item
 
 
 class WishListGETSerializer(serializers.ModelSerializer):
     user = UserDataModelSerializer()
-    product_variant = serializers.SerializerMethodField()
+    product = serializers.SerializerMethodField()
     created_by = serializers.SerializerMethodField()
     updated_by = serializers.SerializerMethodField()
 
@@ -144,9 +142,8 @@ class WishListGETSerializer(serializers.ModelSerializer):
     def get_updated_by(self, attrs):
         return str(attrs.updated_by if attrs.updated_by else '')
 
-    def get_product_variant(self, attrs):
-        from product.serializers import VariantModelSerializerGET
-        return VariantModelSerializerGET(attrs.product_variant).data
+    def get_product(self, attrs):
+        return str(attrs.product if attrs.product else '')
 
     class Meta:
         model = WishList
@@ -213,4 +210,3 @@ class ReviewImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReviewImage
         fields = '__all__'
-
