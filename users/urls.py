@@ -18,6 +18,7 @@ urlpatterns = [
     path('user/me/', views.Me.as_view(), name='me'),
     path('user/prolile-update/', views.ProfileUpdate.as_view(), name='profile-update'),
     path('user/user-signed-up/', views.LogtoUserCreateHooks.as_view(), name='user-signed-up'),
+    path('user/subscribe/', views.SubscribeToSignup.as_view(), name='subscribe-to-signup'),
 ]
 
 urlpatterns += router.urls
