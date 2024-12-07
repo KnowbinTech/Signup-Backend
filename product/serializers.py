@@ -127,8 +127,8 @@ class ProductsModelSerializerGET(serializers.ModelSerializer):
         from setup.middleware.request import CurrentRequestMiddleware
         request_ = CurrentRequestMiddleware.get_request()
         user = request_.user if request_ else False
-        if user:
-            return attrs.product_wishlist.filter(user=user.id, deleted=False).exists()
+        if user and user.is_authenticated:
+            return attrs.product_wishlist.filter(user=user, deleted=False).exists()
         return False
 
     class Meta:
