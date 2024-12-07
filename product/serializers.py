@@ -20,9 +20,6 @@ from masterdata.serializers import RetrieveDimensionModelSerializer
 from masterdata.serializers import RetrieveAttributeModelSerializer
 from inventory.serializers import TaxModelSerializerGET
 
-from setup.utils import generate_presigned_url
-
-
 class ProductsModelSerializer(serializers.ModelSerializer):
     short_description = serializers.CharField()
     sku = serializers.CharField()

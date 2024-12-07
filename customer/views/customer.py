@@ -63,7 +63,7 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
     # authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     queryset = Products.objects.all()
-    serializer_class = ProductsModelSerializer
+    serializer_class = ProductsModelSerializerGET
     retrieve_serializer_class = ProductsModelSerializerGET
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = CustomerProductFilter
