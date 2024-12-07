@@ -6,6 +6,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 
 from setup.export import ExportData
 from setup.permissions import IsSuperUser
@@ -17,6 +18,7 @@ from customer.models import Review
 from customer.filters import CustomerReviewFilter
 
 
+@extend_schema(tags=["Review"])
 class ReviewModelView(APIView):
     permission_classes = (IsAuthenticated, IsSuperUser,)
 
@@ -31,9 +33,10 @@ class ReviewModelView(APIView):
         }, status=HTTP_201_CREATED)
 
 
+@extend_schema(tags=["Review"])
 class ReviewModelViewSet(GenericViewSet, ListModelMixin, ExportData):
     permission_classes = (IsAuthenticated, IsSuperUser,)
-    queryset = Review.objects.all()
+    queryset = Review.objects.all().order_by('-id')
     serializer_class = ReviewSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = CustomerReviewFilter

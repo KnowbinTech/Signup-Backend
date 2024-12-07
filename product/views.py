@@ -1,7 +1,8 @@
+import json
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-import json
+from drf_spectacular.utils import extend_schema
 
 from setup.views import BaseModelViewSet
 from setup.export import ExportData
@@ -44,8 +45,9 @@ from product.filters import LookBookItemsFilter
 from django.shortcuts import get_object_or_404
 
 
+@extend_schema(tags=["Products"])
 class ProductsModelViewSet(BaseModelViewSet, ExportData):
-    queryset = Products.objects.all()
+    queryset = Products.objects.all().order_by('-id')
     serializer_class = ProductsModelSerializer
     retrieve_serializer_class = ProductsModelSerializerGET
     filterset_class = ProductFilter
@@ -193,8 +195,9 @@ class ProductsModelViewSet(BaseModelViewSet, ExportData):
         return Response({'message': message}, status=status.HTTP_200_OK)
 
 
+@extend_schema(tags=["Products"])
 class VariantModelViewSet(BaseModelViewSet):
-    queryset = Variant.objects.all()
+    queryset = Variant.objects.all().order_by('-id')
     serializer_class = VariantModelSerializer
     retrieve_serializer_class = VariantModelSerializerGET
     search_fields = ['product__name']
@@ -262,8 +265,9 @@ class VariantModelViewSet(BaseModelViewSet):
         )
 
 
+@extend_schema(tags=["Products"])
 class ProductImageModelViewSet(BaseModelViewSet):
-    queryset = ProductImage.objects.all()
+    queryset = ProductImage.objects.all().order_by('-id')
     serializer_class = ProductImageModelSerializer
     search_fields = ['product__name']
     default_fields = [
@@ -288,8 +292,9 @@ class ProductImageModelViewSet(BaseModelViewSet):
                 print('Exception e : ', str(e))
 
 
+@extend_schema(tags=["Products"])
 class CollectionModelViewSet(BaseModelViewSet, ExportData):
-    queryset = Collection.objects.all()
+    queryset = Collection.objects.all().order_by('-id')
     serializer_class = CollectionModelSerializer
     retrieve_serializer_class = CollectionModelSerializerGET
     search_fields = ['name']
@@ -330,8 +335,9 @@ class CollectionModelViewSet(BaseModelViewSet, ExportData):
         }, status=status.HTTP_200_OK)
 
 
+@extend_schema(tags=["Products"])
 class CollectionItemsModelViewSet(BaseModelViewSet):
-    queryset = CollectionItems.objects.all()
+    queryset = CollectionItems.objects.all().order_by('-id')
     serializer_class = CollectionItemsModelSerializer
     retrieve_serializer_class = CollectionItemsModelSerializerGET
     search_fields = ['product__name', 'collection__name']
@@ -342,8 +348,9 @@ class CollectionItemsModelViewSet(BaseModelViewSet):
     filterset_class = CollectionItemsFilter
 
 
+@extend_schema(tags=["Products"])
 class LookBookModelViewSet(BaseModelViewSet, ExportData):
-    queryset = LookBook.objects.all()
+    queryset = LookBook.objects.all().order_by('-id')
     serializer_class = LookBookModelSerializer
     retrieve_serializer_class = LookBookModelSerializerGET
     search_fields = ['name']
@@ -384,8 +391,9 @@ class LookBookModelViewSet(BaseModelViewSet, ExportData):
         }, status=status.HTTP_200_OK)
 
 
+@extend_schema(tags=["Products"])
 class LookBookItemsModelViewSet(BaseModelViewSet):
-    queryset = LookBookItems.objects.all()
+    queryset = LookBookItems.objects.all().order_by('-id')
     serializer_class = LookBookItemsModelSerializer
     retrieve_serializer_class = LookBookItemsModelSerializerGET
     search_fields = ['product__name', 'look_book__name']

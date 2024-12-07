@@ -1,6 +1,4 @@
-from rest_framework.decorators import action
-from rest_framework.response import Response
-
+from drf_spectacular.utils import extend_schema
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin
 from rest_framework.permissions import AllowAny
@@ -17,6 +15,7 @@ from .serializers import HeroSectionModelSerializerGET
 from rest_framework.authentication import SessionAuthentication
 
 
+@extend_schema(tags=["CMS"])
 class HeroSectionModelViewSet(BaseModelViewSet, ExportData):
     queryset = HeroSection.objects.all().order_by('-id')
     serializer_class = HeroSectionModelSerializer
@@ -28,6 +27,7 @@ class HeroSectionModelViewSet(BaseModelViewSet, ExportData):
     ]
 
 
+@extend_schema(tags=["CMS"])
 class HeroSectionCustomer(GenericViewSet, ListModelMixin):
     authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)

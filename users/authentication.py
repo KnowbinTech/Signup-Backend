@@ -1,10 +1,17 @@
 import json
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.authentication import BaseAuthentication
+from drf_spectacular.extensions import OpenApiAuthenticationExtension
 from rest_framework.exceptions import AuthenticationFailed
 from jose import jwt
 import requests
 from django.conf import settings
 from users.models import User
+
+
+class NoOpAuthentication(BaseAuthentication):
+    def authenticate(self, request):
+        return None  # Always return None to bypass authentication
 
 
 class LogtoJWTAuthentication(JWTAuthentication):
@@ -35,20 +42,25 @@ class LogtoJWTAuthentication(JWTAuthentication):
             raise AuthenticationFailed('Invalid token')
 
     def authenticate(self, request):
+        if not request.headers.get('Authorization'):
+            return None
+
         header = self.get_header(request)
         try:
             raw_token = self.get_raw_token(header)
         except Exception as e:
-            print('Exception : ', e)
-            raise AuthenticationFailed('Invalid token')
+            print('Exception on getting the raw token')
+            return None
 
         if raw_token is None:
             return None
 
-        # Decode and verify token
-        validated_token = self.decode_token(raw_token)
-
-        return self.find_user(validated_token), validated_token
+        try:
+            validated_token = self.decode_token(raw_token)
+            return self.find_user(validated_token), validated_token
+        except Exception as e:
+            print('Exception on finding the user', e)
+            return None
 
     def find_user(self, validated_token):
         user_id_claim = settings.SIMPLE_JWT.get('USER_ID_CLAIM')
@@ -67,6 +79,18 @@ class LogtoJWTAuthentication(JWTAuthentication):
         except Exception as e:
             print('Exception : ', e)
             raise AuthenticationFailed('Invalid token')
+
+
+class LogtoJWTAuthenticationExtension(OpenApiAuthenticationExtension):
+    target_class = 'users.authentication.LogtoJWTAuthentication'  # The authentication class to associate
+    name = "LogtoJWT"  # Name to display in the schema
+
+    def get_security_definition(self, auto_schema):
+        return {
+            'type': 'http',
+            'scheme': 'bearer',
+            'bearerFormat': 'JWT',
+        }
 
 
 

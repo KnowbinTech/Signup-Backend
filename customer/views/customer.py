@@ -7,6 +7,9 @@ from rest_framework.mixins import ListModelMixin
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
+from drf_spectacular.utils import extend_schema
+from django.db.models import Count
+
 from rest_framework import filters
 from rest_framework.response import Response
 from rest_framework import status
@@ -24,6 +27,9 @@ from product.models import VariantAttributes
 from product.models import Collection
 from product.models import LookBook
 from product.serializers import ProductsModelSerializer
+from masterdata.models import Category
+from orders.models import Order
+
 from product.serializers import ProductsModelSerializerGET
 from product.serializers import VariantModelSerializerGET
 from product.serializers import CollectionModelSerializerGET
@@ -40,9 +46,10 @@ from customer.filters import CustomerCategoryFilter
 from customer.filters import CustomerCollectionFilter
 from customer.filters import CustomerLookBookFilter
 from customer.filters import CustomerOrderFilter
-
 from customer.models import WishList
 
+
+@extend_schema(tags=["Customer"])
 class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     """
         Get the list of variant products.
@@ -53,6 +60,7 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
         Returns:
             Response: A DRF Response object with the variant product data.
     """
+    # authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     queryset = Products.objects.all()
     serializer_class = ProductsModelSerializer
@@ -172,6 +180,7 @@ class CustomerLookBookViewSet(GenericViewSet, ListModelMixin):
     search_fields = ['name', 'brand__name']
 
 
+@extend_schema(tags=["Customer"])
 class CustomerVariantViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
     """
         Get the list of variant products.
@@ -201,6 +210,8 @@ class CustomerVariantViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
             status=status.HTTP_200_OK
         )
 
+
+@extend_schema(tags=["Customer"])
 class CustomerCategoryViewSet(GenericViewSet, ListModelMixin):
     """
         Get the list of categories.
@@ -220,6 +231,7 @@ class CustomerCategoryViewSet(GenericViewSet, ListModelMixin):
     search_fields = ['name', 'tags', 'handle']
 
 
+@extend_schema(tags=["Customer"])
 class CustomerCollectionViewSet(GenericViewSet, ListModelMixin):
     """
         Get the list of collection.
@@ -232,13 +244,14 @@ class CustomerCollectionViewSet(GenericViewSet, ListModelMixin):
     """
     authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
-    queryset = Collection.objects.all()
+    queryset = Collection.objects.all().order_by('-id')
     serializer_class = CollectionModelSerializerGET
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = CustomerCollectionFilter
     search_fields = ['name', 'tags', 'description']
 
 
+@extend_schema(tags=["Customer"])
 class CustomerLookBookViewSet(GenericViewSet, ListModelMixin):
     """
         Get the list of look book.
@@ -251,13 +264,14 @@ class CustomerLookBookViewSet(GenericViewSet, ListModelMixin):
     """
     authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
-    queryset = LookBook.objects.all()
+    queryset = LookBook.objects.all().order_by('-id')
     serializer_class = LookBookModelSerializerGET
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = CustomerLookBookFilter
     search_fields = ['name']
 
 
+@extend_schema(tags=["Customer"])
 class CustomerOrderViewSet(GenericViewSet, ListModelMixin):
     """
         Get the list of Orders.
@@ -279,29 +293,30 @@ class CustomerOrderViewSet(GenericViewSet, ListModelMixin):
         return Order.objects.filter(user=user.username)
 
 
+@extend_schema(tags=["Customer"])
 class CustomerBrandViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
-   """
-   Get the list of brands.
-    Parameters:
-       request (HttpRequest): The HTTP request object containing model data.
-    Returns:
-       Response: A DRF Response object with the brand data.
-   """
-   authentication_classes = [SessionAuthentication]
-   permission_classes = (AllowAny,)
-   queryset = Brand.objects.all()
-   serializer_class = BrandSerializerGET
-   filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
-   search_fields = ['name', 'description']
+    """
+    Get the list of brands.
+     Parameters:
+        request (HttpRequest): The HTTP request object containing model data.
+     Returns:
+        Response: A DRF Response object with the brand data.
+    """
+    authentication_classes = [SessionAuthentication]
+    permission_classes = (AllowAny,)
+    queryset = Brand.objects.all().order_by('-id')
+    serializer_class = BrandSerializerGET
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['name', 'description']
 
-   @action(detail=True, methods=['GET'], url_path='products')
-   def brand_products(self, request, *args, **kwargs):
-       """
-       API to fetch all products for a specific brand
-       """
-       brand = self.get_object()
-       products = Products.objects.filter(brand=brand)
-       return Response(
-           ProductsModelSerializerGET(products, many=True).data,
-           status=status.HTTP_200_OK
-       )
+    @action(detail=True, methods=['GET'], url_path='products')
+    def brand_products(self, request, *args, **kwargs):
+        """
+        API to fetch all products for a specific brand
+        """
+        brand = self.get_object()
+        products = Products.objects.filter(brand=brand)
+        return Response(
+            ProductsModelSerializerGET(products, many=True).data,
+            status=status.HTTP_200_OK
+        )

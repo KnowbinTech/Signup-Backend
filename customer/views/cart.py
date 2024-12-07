@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.utils import extend_schema
 
 from setup.permissions import IsCustomer
 
@@ -14,6 +15,7 @@ from customer.serializers import UpdateCartProductSerializer
 from customer.serializers import AddToCartSerializer
 
 
+@extend_schema(tags=["Customer"])
 class CartModelViewSet(GenericViewSet):
     permission_classes = (IsAuthenticated, IsCustomer,)
     queryset = Cart.objects.filter(is_completed=False)

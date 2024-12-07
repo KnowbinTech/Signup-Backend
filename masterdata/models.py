@@ -35,6 +35,7 @@ class Dimension(BaseModel):
         ('Kg', 'Kg'),
     )
 
+    name = models.CharField(max_length=25, blank=True, null=True, verbose_name='Name')
     length = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Length')
     breadth = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Breadth')
     height = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, verbose_name='Height')

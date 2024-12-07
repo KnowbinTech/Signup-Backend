@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
-from django.http import HttpResponseRedirect
+from drf_spectacular.utils import extend_schema
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin
 
@@ -26,6 +26,7 @@ from transaction.filters import TransactionFilter
 from transaction.mixins import PhonePe
 
 
+@extend_schema(tags=["Transaction"])
 class TransactionAPIView(APIView):
     permission_classes = (IsAuthenticated, IsCustomer)
     serializer_class = TransactionSerializer
@@ -92,6 +93,7 @@ class TransactionAPIView(APIView):
         # }, status=status.HTTP_200_OK)
 
 
+@extend_schema(tags=["Transaction"])
 class TransactionCallBackAPIView(APIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
@@ -150,12 +152,13 @@ class TransactionCallBackAPIView(APIView):
         return render(request, 'payment_failed.html', context={'output': 'No Transaction ID', 'main_request': form_data})
 
 
+@extend_schema(tags=["Transaction"])
 class TransactionModelViewSet(GenericViewSet, ListModelMixin, ExportData):
     """
         API For Transaction List
     """
     permission_classes = (IsAuthenticated, IsSuperUser,)
-    queryset = Transaction.objects.all()
+    queryset = Transaction.objects.all().order_by('-id')
     serializer_class = TransactionRetrieveSerializer
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = TransactionFilter

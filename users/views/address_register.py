@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from drf_spectacular.utils import extend_schema
 
 from setup.permissions import IsCustomer
 from setup.views import BaseModelViewSet
@@ -11,9 +12,10 @@ from users.serializers import AddressRegisterModelSerializerGET
 from users.filters import AddressRegisterFilter
 
 
+@extend_schema(tags=["Account"])
 class AddressRegisterModelViewSet(BaseModelViewSet):
     permission_classes = (IsAuthenticated, IsCustomer,)
-    queryset = AddressRegister.objects.all()
+    queryset = AddressRegister.objects.all().order_by('-id')
     serializer_class = AddressRegisterModelSerializer
     retrieve_serializer_class = AddressRegisterModelSerializerGET
     default_fields = [

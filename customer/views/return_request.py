@@ -8,6 +8,7 @@ from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 
 from setup.views import BaseModelViewSet
 from setup.export import ExportData
@@ -27,12 +28,13 @@ from customer.serializers import UpdateReturnRefundDetailsModelSerializer
 from customer.filters import CustomerReturnFilter
 
 
+@extend_schema(tags=["Customer"])
 class CustomerReturnViewSet(BaseModelViewSet):
     """
         API for Return request to customer.
     """
     permission_classes = (IsAuthenticated, IsCustomer,)
-    queryset = Return.objects.all()
+    queryset = Return.objects.all().order_by('-id')
     serializer_class = ReturnTrackingUpdateSerializer
     retrieve_serializer_class = ReturnModelSerializerGET
     filterset_class = CustomerReturnFilter
@@ -93,9 +95,10 @@ class CustomerReturnViewSet(BaseModelViewSet):
         }, status=status.HTTP_201_CREATED)
 
 
+@extend_schema(tags=["Customer"])
 class ManageCustomerReturn(GenericViewSet, ListModelMixin, RetrieveModelMixin, ExportData):
     permission_classes = (IsAuthenticated, IsSuperUser,)
-    queryset = Return.objects.all()
+    queryset = Return.objects.all().order_by('-id')
     serializer_class = ReturnModelSerializerGET
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_class = CustomerReturnFilter
