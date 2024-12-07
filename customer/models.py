@@ -73,12 +73,18 @@ class Cart(BaseModel):
             return cls.objects.create(session_key=session_key, total_price=0)
 
     @classmethod
-    def get_user_cart(cls):
+    def get_user_cart(cls, set_total=True):
         user = CurrentRequestMiddleware.get_request().user
+
         cart, created = cls.objects.get_or_create(
             user_id=user.id, deleted=False,
             is_completed=False
         )
+        if set_total:
+            cart.total_amount = cart.cartitems.filter(
+                product_variant__stock__gt=0, deleted=False
+            ).aggregate(total=Sum('total_amount'))['total'] or 0
+            cart.save()
         return cart
 
 

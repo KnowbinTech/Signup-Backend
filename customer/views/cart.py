@@ -56,8 +56,12 @@ class CartModelViewSet(GenericViewSet):
             Returns:
                 Response: A DRF Response object indicating success or failure and a message.
         """
-        cart = Cart.get_user_cart()
-        
+        cart = Cart.get_user_cart(set_total=False)
+           # Check if cart is None
+        if cart is None:
+            # Handle the case where the cart could not be created
+            return Response({"error": "Cart could not be created."}, status=400)
+
         serializer = AddToCartSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(cart=cart)
@@ -89,7 +93,7 @@ class CartModelViewSet(GenericViewSet):
                 Response: A DRF Response object indicating success or failure and a message.
         """
 
-        cart = Cart.get_user_cart()
+        cart = Cart.get_user_cart(set_total=False)
         serializer = UpdateCartProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -121,7 +125,7 @@ class CartModelViewSet(GenericViewSet):
                 Response: A DRF Response object indicating success or failure and a message.
         """
 
-        cart = Cart.get_user_cart()
+        cart = Cart.get_user_cart(set_total=False)
         item = cart.cartitems.get(id=pk)
         item.delete()
         return Response({

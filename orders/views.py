@@ -78,7 +78,7 @@ class PlaceOrder(GenericViewSet, RetrieveModelMixin):
             status=Order.PENDING
         )
 
-        cart_items = cart.cartitems.filter(deleted=False)
+        cart_items = cart.cartitems.filter(product_variant__stock__gt=0,deleted=False)
 
         if not cart_items.exists():
             return Response({
