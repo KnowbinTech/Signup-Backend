@@ -75,16 +75,6 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
         """
         return Products.objects.annotate(variant_count=Count('product_variant')).filter(variant_count__gt=0)
 
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return self.retrieve_serializer_class
-        return self.serializer_class
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
-
     @action(detail=True, methods=['GET'], url_path='other-variants')
     def other_variants(self, request, *args, **kwargs):
         """

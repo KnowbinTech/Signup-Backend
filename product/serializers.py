@@ -127,9 +127,11 @@ class ProductsModelSerializerGET(serializers.ModelSerializer):
         return ProductImageModelSerializer(attrs.product_images.all(), many=True).data
 
     def get_is_wishlisted(self, attrs):
-        request = self.context.get('request')
-        if request and hasattr(request, 'user'):
-            return attrs.product_wishlist.filter(user=request.user.id, deleted=False).exists()
+        from setup.middleware.request import CurrentRequestMiddleware
+        request_ = CurrentRequestMiddleware.get_request()
+        user = request_.user if request_ else False
+        if user:
+            return attrs.product_wishlist.filter(user=user.id, deleted=False).exists()
         return False
 
     class Meta:
