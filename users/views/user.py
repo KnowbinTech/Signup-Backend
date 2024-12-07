@@ -4,6 +4,8 @@ from rest_framework import status
 from drf_spectacular.utils import extend_schema
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.utils.decorators import method_decorator
@@ -16,8 +18,9 @@ from users.serializers import UserDataModelSerializer
 from users.serializers import ProfileUpdateSerializer
 from users.serializers import ResetPassword
 
-from users.utils import get_userdata
 
+from users.utils import get_userdata
+from users.filters import UserFilter
 from django.conf import settings
 from django.core.mail import send_mail
 
@@ -57,6 +60,9 @@ class CustomerViewSet(GenericViewSet, ListModelMixin):
     permission_classes = (IsAuthenticated, IsSuperUser)
     queryset = User.objects.filter(deleted=False, is_customer=True)
     serializer_class = UserDataModelSerializer
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['name', 'username']
+    filterset_class = UserFilter
 
 
 @extend_schema(tags=["Account"])

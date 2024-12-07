@@ -69,6 +69,11 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
     filterset_class = CustomerProductFilter
     search_fields = ['name', 'brand__name']
 
+    def get_serializer_class(self):
+        if self.action == 'list' or self.action == 'retrieve' and self.retrieve_serializer_class:
+            return self.retrieve_serializer_class
+        return self.serializer_class
+
     def get_queryset(self, *args, **kwargs):
         """
         Exclude products with no variants.

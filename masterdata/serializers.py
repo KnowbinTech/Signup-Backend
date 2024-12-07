@@ -13,7 +13,7 @@ from .models import ReturnReason
 class BrandModelSerializer(serializers.ModelSerializer):
     name = serializers.CharField(required=True)
     logo = serializers.FileField(required=False)
-    description = serializers.CharField(required=True)
+    # description = serializers.CharField(required=False)
     is_active = serializers.BooleanField(default=True)
     tags = serializers.ListField(child=serializers.CharField(), required=False, allow_null=True, allow_empty=True)
 
