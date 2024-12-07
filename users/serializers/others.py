@@ -91,7 +91,8 @@ class AddressRegisterModelSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         from setup.middleware.request import CurrentRequestMiddleware
-        user = CurrentRequestMiddleware.get_request().user
+        request_ = CurrentRequestMiddleware.get_request()
+        user = request_.user if request_ else None
         obj = AddressRegister.objects.create(**validated_data)
         obj.user = user
         obj.save()

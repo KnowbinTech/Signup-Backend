@@ -36,7 +36,8 @@ class ResetPassword(serializers.Serializer):
 
     def validate(self, attrs):
         from setup.middleware.request import CurrentRequestMiddleware
-        request_user = CurrentRequestMiddleware.get_request().user
+        request_ = CurrentRequestMiddleware.get_request()
+        user = request_.user if request_ else None
         old_password = attrs.get('old_password')
         new_password = attrs.get('new_password')
         confirm_password = attrs.get('confirm_password')
@@ -51,18 +52,18 @@ class ResetPassword(serializers.Serializer):
         self.logto = LOGTOManagementAPI() # noqa
 
         try:
-            self.logto.user_has_password(request_user.sub)
+            self.logto.user_has_password(user.sub)
         except Exception as e:
             print('Exception : ', e)
             raise serializers.ValidationError('Invalid password.')
 
         try:
-            self.logto.check_password(request_user.sub, old_password)
+            self.logto.check_password(user.sub, old_password)
         except Exception as e:
             print('Exception : ', e)
             raise serializers.ValidationError('Invalid password.')
 
-        self.user = request_user # noqa
+        self.user = user # noqa
 
         return attrs
 
