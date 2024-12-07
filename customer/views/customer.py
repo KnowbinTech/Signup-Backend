@@ -53,7 +53,6 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
         Returns:
             Response: A DRF Response object with the variant product data.
     """
-    authentication_classes = [SessionAuthentication]
     permission_classes = (AllowAny,)
     queryset = Products.objects.all()
     serializer_class = ProductsModelSerializer
@@ -67,16 +66,6 @@ class CustomerProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin)
         Exclude products with no variants.
         """
         return Products.objects.annotate(variant_count=Count('product_variant')).filter(variant_count__gt=0)
-
-    def get_serializer_class(self):
-        if self.action == 'retrieve':
-            return self.retrieve_serializer_class
-        return self.serializer_class
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
 
     @action(detail=True, methods=['GET'], url_path='other-variants')
     def other_variants(self, request, *args, **kwargs):
