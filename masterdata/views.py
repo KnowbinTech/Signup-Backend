@@ -92,7 +92,8 @@ class BrandModelViewSet(BaseModelViewSet, ExportData):
     serializer_class = BrandModelSerializer
     retrieve_serializer_class = BrandModelSerializerGET
     search_fields = ['name']
-    default_fields = ['name', 'description']
+    # default_fields = ['name', 'description']
+    default_fields = ['name']
     filterset_class = BrandFilter
 
     @action(detail=True, methods=['POST'], url_path='deactivate')
